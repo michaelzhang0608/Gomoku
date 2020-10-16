@@ -1,0 +1,4 @@
+"Rule: ocaml dependencies ml (%=test )": "\216L\190\229e:\218\145\166\132+\252\2403\199\224"
+"Rule: ocaml: ml -> cmo & cmi (%=test )": ";\164\175\190\255$ \248\023\238\167\241\218\207\184\026"
+"Resource: /Users/michaelzhang/3110-final-project/test.ml": "/\\c\178oF\185\"\018\186[f=I\016\237"
+"Rule: ocaml: cmo* -> byte (%=test )": "\174\020\248^\179\006\1565i\215k\n:@#'"
