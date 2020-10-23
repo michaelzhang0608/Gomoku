@@ -4,4 +4,3 @@
 #load "bot.cmo";;
 #load "game.cmo";;
 #load "main.cmo";;
-#load "authors.cmo";;
