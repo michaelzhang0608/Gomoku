@@ -1,7 +1,22 @@
 open ANSITerminal
 
-
 type board = string array array
+
+type player_id = int
+
+type player = {
+  id: player_id;
+  games_won: int;
+  is_turn: bool;
+  color: string
+}
+
+type game = {
+  id: int;
+  game_board: board;
+  player1: player;
+  player2: player;
+}
 
 (** let print_board (board: board) = 
     let print_line (line: string array) =  
