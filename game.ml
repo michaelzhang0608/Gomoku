@@ -4,6 +4,11 @@ type board = string array array
 
 type player_id = int
 
+type score = {
+  player1: int;
+  player2: int
+}
+
 type player = {
   id: player_id;
   games_won: int;
@@ -35,7 +40,7 @@ let print_color (board: board)  =
     done in
   Array.iter (fun line -> print_line line; print_endline " ") board
 
-let place_stone board x y piece = 
+let make_move board x y piece = 
   let line = Array.get board (y - 1) in
   Array.set line (x - 1) piece;
   Array.set board (y - 1) line;;
@@ -54,7 +59,7 @@ let rec dfs board x y acc color dir=
   else dfs board (x + 1) (y - 1) (acc + 1) color dir
 
 
-let check_winner board x y = 
+let check_victor board x y = 
   let color = Array.get (Array.get board (x)) (y) in
   if ((dfs board (x - 1) y 1 color "north") + 
       (dfs board (x + 1) y 1 color "south")) >= 5 ||
@@ -66,8 +71,11 @@ let check_winner board x y =
              (dfs board (x + 1) (y - 1) 1 color "southwest")) >= 5 then "true"
   else "false"
 
+let print_winner winner = 
+  failwith "unimplemented"
 
-
+let update_score score = 
+  failwith "unimplemented"
 
 let print_ouput = 
   let board = [|[|" W "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + ";
@@ -100,15 +108,9 @@ let print_ouput =
                   " + "; " + "; " + "; " + "; " + "|];
                 [|" + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + ";
                   " + "; " + "; " + "; " + "; " + "|]|] in
+  print_color board
 
-  let print = print_color board in
-  let pr  = print_int (dfs board 3 3 1 " B " "east") in
-  check_winner board 3 4
-
-
-
-
-
-
-
+(* let print = print_color board in
+   let pr  = print_int (dfs board 3 3 1 " B " "east") in
+   check_victor board 3 4 *)
 
