@@ -1,6 +1,6 @@
-1. Unzip src
-2. Open src in Vscode
-3. Open terminal in vscode
+1. Unzip finalproject.zip
+2. Open finalproject in Vscode
+3. View terminal in vscode
 4. Run utop in terminal
 5. in utop run: #use "game.ml";;
 6. Color board should be printed 

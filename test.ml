@@ -1,8 +1,13 @@
 (* TODO: Create helper functions for testing *)
 open OUnit2
+open Game
 
-let firsttest name = 
-  name >:: (fun  _-> assert_equal 2 3)
+
+
+
+
+let firsttest name board expected_output= 
+  name >:: (fun  _-> assert_equal 2 expected_output)
 
 
 let f = [
