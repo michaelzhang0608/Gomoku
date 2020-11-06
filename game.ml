@@ -100,9 +100,11 @@ let print_ouput =
                   " + "; " + "; " + "; " + "; " + "|];
                 [|" + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + ";
                   " + "; " + "; " + "; " + "; " + "|]|] in
+
   let print = print_color board in
   let pr  = print_int (dfs board 3 3 1 " B " "east") in
   check_winner board 3 4
+
 
 
 
