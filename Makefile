@@ -1,7 +1,7 @@
-MODULES=bot;game;main
+MODULES=bot game main 
 OBJECTS=$(MODULES:=.cmo)
 TEST=test.byte
-OCAMLBUILD=ocamlbuild -use-ocamlfind
+OCAMLBUILD=ocamlbuild -use-ocamlfind -pkgs ANSITerminal
 
 default: build
 	utop
