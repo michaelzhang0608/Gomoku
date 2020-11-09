@@ -68,8 +68,12 @@ let check_victor board x y =
      ((dfs board (x - 1) (y - 1) 1 color "northwest") + 
       (dfs board (x + 1) (y + 1) 1 color "southeast")) 
      >=5 || ((dfs board (x - 1) (y + 1) 1 color "northeast") +
-             (dfs board (x + 1) (y - 1) 1 color "southwest")) >= 5 then "true"
-  else "false"
+             (dfs board (x + 1) (y - 1) 1 color "southwest")) >= 5 then true
+  else false
+
+let check_tie board = 
+  (Array.for_all (fun line ->
+       Array.for_all ((<>) " + ") line) board)
 
 let print_winner winner = 
   failwith "unimplemented"
