@@ -158,6 +158,69 @@ let board_winner = [|[|" + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; "
                      [|" + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + ";
                        " B "; " B "; " B "; " B "; " B "|]|]
 
+let c_board = [|[|" + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + ";
+                  " + "; " + "; " + "; " + "; " + "|];
+                [|" + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + ";
+                  " + "; " + "; " + "; " + "; " + "|];
+                [|" + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + ";
+                  " + "; " + "; " + "; " + "; " + "|];
+                [|" + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + ";
+                  " + "; " + "; " + "; " + "; " + "|];
+                [|" + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + ";
+                  " + "; " + "; " + "; " + "; " + "|];
+                [|" + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + ";
+                  " + "; " + "; " + "; " + "; " + "|];
+                [|" + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + ";
+                  " + "; " + "; " + "; " + "; " + "|];
+                [|" + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + ";
+                  " + "; " + "; " + "; " + "; " + "|];
+                [|" + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + ";
+                  " + "; " + "; " + "; " + "; " + "|];
+                [|" + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + ";
+                  " + "; " + "; " + "; " + "; " + "|];
+                [|" + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + ";
+                  " + "; " + "; " + "; " + "; " + "|];
+                [|" + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + ";
+                  " + "; " + "; " + "; " + "; " + "|];
+                [|" + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + ";
+                  " + "; " + "; " + "; " + "; " + "|];
+                [|" + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + ";
+                  " + "; " + "; " + "; " + "; " + "|];
+                [|" + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + ";
+                  " + "; " + "; " + "; " B "; " B "|]|]
+
+
+let tie_board = [|[|" B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B ";
+                    " B "; " B "; " B "; " B "; " B "|];
+                  [|" B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B ";
+                    " B "; " B "; " B "; " B "; " B "|];
+                  [|" B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B ";
+                    " B "; " B "; " B "; " B "; " B "|];
+                  [|" B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B ";
+                    " B "; " B "; " B "; " B "; " B "|];
+                  [|" B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B ";
+                    " B "; " B "; " B "; " B "; " B "|];
+                  [|" B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B ";
+                    " B "; " B "; " B "; " B "; " B "|];
+                  [|" B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B ";
+                    " B "; " B "; " B "; " B "; " B "|];
+                  [|" B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B ";
+                    " B "; " B "; " B "; " B "; " B "|];
+                  [|" B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B ";
+                    " B "; " B "; " B "; " B "; " B "|];
+                  [|" B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B ";
+                    " B "; " B "; " B "; " B "; " B "|];
+                  [|" B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B ";
+                    " B "; " B "; " B "; " B "; " B "|];
+                  [|" B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B ";
+                    " B "; " B "; " B "; " B "; " B "|];
+                  [|" B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B ";
+                    " B "; " B "; " B "; " B "; " B "|];
+                  [|" B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B ";
+                    " B "; " B "; " B "; " B "; " B "|];
+                  [|" B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B ";
+                    " B "; " B "; " B "; " B "; " B "|]|]
+
 
 let board1 = make_move c_board 13 15 " B "
 let board2 = make_move c_board 12 15 " B "
@@ -169,11 +232,17 @@ let equal_test name board board1 expected_output=
 let check_victor_test name board x y expected_output= 
   name >:: (fun  _-> assert_equal expected_output (check_victor board x y) )
 
+let check_tie_test name board expected_output= 
+  name >:: (fun  _-> assert_equal expected_output (check_tie board) )
+
 let board_tests = [
   equal_test "test equal" board empty true;
   equal_test "test not equal" b_board empty false;
-  check_victor_test "victor on winner board" board_winner 14 10 "true";
-  check_victor_test "victor on empty board" b_board 14 14 "false";
+  check_victor_test "victor on winner board" board_winner 14 10 true;
+  check_victor_test "victor on empty board" b_board 14 14 false;
+  check_tie_test "tie on empty board" empty false;
+  check_tie_test "tie on non-tie board" b_board false;
+  check_tie_test "tie on tie board" tie_board true;
 ]
 
 let suite = 
