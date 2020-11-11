@@ -21,9 +21,16 @@ val print_color : board -> unit
     maintain the order between Player 1 and Player 2’s stones. *)
 val make_move : 'a array array -> int -> int -> 'a -> unit
 
-(** [get_victor board] is the player_id of the winner of game has a winner or a
-    tie. The board [board] is the current board with all the players' moves. *)
-val  check_victor: 'a array array -> int -> int -> string
+(** [check_victor board] is the bool if the game has a winner. The board [board]
+    is the current board with all the players' moves. *)
+val  check_victor: 'a array array -> int -> int -> bool
+
+
+(** [check_tie board] is the bool if the game has resulted in a tie. The board 
+    [board] is the current board with all the players' moves. A tie only occurs 
+    if the board is filled, meaning there are no more moves to be made and there
+    is no winner.*)
+val  check_tie: string array array -> bool
 
 (** [print_winner if_win] is a string, indicating which player won or if there
     was a tie. When the bool [if_win] equal true, the victory is printed. 
