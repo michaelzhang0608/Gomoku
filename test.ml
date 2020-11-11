@@ -33,6 +33,38 @@ let empty = [|[|" + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; "
               [|" + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + ";
                 " + "; " + "; " + "; " + "; " + "|]|]
 
+let tie_board = [|[|" B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B ";
+                    " B "; " B "; " B "; " B "; " B "|];
+                  [|" B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B ";
+                    " B "; " B "; " B "; " B "; " B "|];
+                  [|" B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B ";
+                    " B "; " B "; " B "; " B "; " B "|];
+                  [|" B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B ";
+                    " B "; " B "; " B "; " B "; " B "|];
+                  [|" B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B ";
+                    " B "; " B "; " B "; " B "; " B "|];
+                  [|" B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B ";
+                    " B "; " B "; " B "; " B "; " B "|];
+                  [|" B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B ";
+                    " B "; " B "; " B "; " B "; " B "|];
+                  [|" B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B ";
+                    " B "; " B "; " B "; " B "; " B "|];
+                  [|" B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B ";
+                    " B "; " B "; " B "; " B "; " B "|];
+                  [|" B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B ";
+                    " B "; " B "; " B "; " B "; " B "|];
+                  [|" B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B ";
+                    " B "; " B "; " B "; " B "; " B "|];
+                  [|" B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B ";
+                    " B "; " B "; " B "; " B "; " B "|];
+                  [|" B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B ";
+                    " B "; " B "; " B "; " B "; " B "|];
+                  [|" B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B ";
+                    " B "; " B "; " B "; " B "; " B "|];
+                  [|" B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B ";
+                    " B "; " B "; " B "; " B "; " B "|]|]
+
+
 let test_copy_board b = Array.map Array.copy b
 
 let test_update_board b x y value =  
@@ -75,6 +107,9 @@ let equal_test name b1 b2 expected_output=
 let check_victor_test name board x y expected_output= 
   name >:: (fun  _-> assert_equal expected_output (check_victor board x y) )
 
+let check_tie_test name board expected_output= 
+  name >:: (fun  _-> assert_equal expected_output (check_tie board) )
+
 let reset_board_test name b1 b2 expected_output =  
   print_endline (name ^ " before reset=");
   print_color b1;
@@ -87,9 +122,12 @@ let reset_board_test name b1 b2 expected_output =
 
 let board_tests = [
   equal_test "test not equal" board_1 empty false;
-  check_victor_test "victor on winner board" board_winner 14 10 "true";
-  check_victor_test "victor on empty board" board_1 14 14 "false";
+  check_victor_test "victor on winner board" board_winner 14 10 true;
+  check_victor_test "victor on empty board" board_1 14 14 false;
   reset_board_test "test reset board" board_2 empty true;
+  check_tie_test "tie on empty board" empty false;
+  check_tie_test "tie on non-tie board" board_1 false;
+  check_tie_test "tie on tie board" tie_board true;
 ]
 
 
