@@ -1,5 +1,16 @@
 ### Starting build.
-Backtrace:
-                      - Failed to build the target bot
-                          - Building bot
-# Compilation unsuccessful.
+# Target: main.ml.depends, tags: { package(ANSITerminal), package(ounit2), extension:ml, file:main.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package ounit2 -package ANSITerminal -modules main.ml > main.ml.depends # cached
+# Target: game.mli.depends, tags: { package(ANSITerminal), package(ounit2), extension:mli, file:game.mli, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package ounit2 -package ANSITerminal -modules game.mli > game.mli.depends # cached
+# Target: game.cmi, tags: { package(ANSITerminal), package(ounit2), byte, compile, extension:mli, file:game.mli, interf, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package ounit2 -package ANSITerminal -o game.cmi game.mli # cached
+# Target: main.cmo, tags: { package(ANSITerminal), package(ounit2), byte, compile, extension:cmo, extension:ml, file:main.cmo, file:main.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package ounit2 -package ANSITerminal -o main.cmo main.ml # cached
+# Target: game.ml.depends, tags: { package(ANSITerminal), package(ounit2), extension:ml, file:game.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package ounit2 -package ANSITerminal -modules game.ml > game.ml.depends # cached
+# Target: game.cmo, tags: { package(ANSITerminal), package(ounit2), byte, compile, extension:cmo, extension:ml, file:game.cmo, file:game.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package ounit2 -package ANSITerminal -o game.cmo game.ml # cached
+# Target: main.byte, tags: { package(ANSITerminal), package(ounit2), byte, dont_link_with, extension:byte, file:main.byte, link, ocaml, program, quiet, traverse }
+ocamlfind ocamlc -linkpkg -package ounit2 -package ANSITerminal game.cmo main.cmo -o main.byte
+# Compilation successful.
