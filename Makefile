@@ -2,6 +2,7 @@ MODULES=bot game main
 OBJECTS=$(MODULES:=.cmo)
 TEST=test.byte
 OCAMLBUILD=ocamlbuild -use-ocamlfind -pkgs ANSITerminal
+MAIN = main.byte
 
 default: build
 	utop
@@ -18,3 +19,5 @@ zip:
 clean:
 	ocamlbuild -clean
 	rm -f finalproject.zip
+play:	
+	$(OCAMLBUILD) $(MAIN) && ./$(MAIN)
