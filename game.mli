@@ -34,3 +34,6 @@ val  print_winner : bool -> string
     each player has won in a session. The score [score] represents the current
      points earned by each player.  *)
 val update_score : score -> score
+
+(** [reset_board board] *)
+val reset_board : board -> unit

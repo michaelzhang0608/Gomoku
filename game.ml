@@ -77,7 +77,15 @@ let print_winner winner =
 let update_score score = 
   failwith "unimplemented"
 
-let print_ouput = 
+let reset_board (b : board) =
+  let reset_line i ln = 
+    for j = 0 to Array.length ln - 1 do 
+      Array.set ln j " + "
+    done;
+    Array.set b i ln in
+  Array.iteri (fun i line -> reset_line i line) b
+
+(*let print_output = 
   let board = [|[|" W "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + ";
                   " + "; " + "; " + "; " + "; " + "|];
                 [|" + "; " W "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + ";
@@ -108,9 +116,9 @@ let print_ouput =
                   " + "; " + "; " + "; " + "; " + "|];
                 [|" + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + ";
                   " + "; " + "; " + "; " + "; " + "|]|] in
-  print_color board
+  print_color board *)
 
 (* let print = print_color board in
-   let pr  = print_int (dfs board 3 3 1 " B " "east") in
+   let pr  = print_int (dfs board 3 3 1 " B " "east") in 
    check_victor board 3 4 *)
 
