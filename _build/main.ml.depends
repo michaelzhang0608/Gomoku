@@ -1,1 +1,1 @@
-main.ml: ANSITerminal Array Game List Stdlib Sys
+main.ml: ANSITerminal Array Game Stdlib Sys
