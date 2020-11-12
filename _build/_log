@@ -7,15 +7,6 @@ ocamlfind ocamldep -package ounit2 -package ANSITerminal -modules game.mli > gam
 ocamlfind ocamlc -c -package ounit2 -package ANSITerminal -o game.cmi game.mli # cached
 # Target: main.cmo, tags: { package(ANSITerminal), package(ounit2), byte, compile, extension:cmo, extension:ml, file:main.cmo, file:main.ml, implem, ocaml, quiet, traverse }
 ocamlfind ocamlc -c -package ounit2 -package ANSITerminal -o main.cmo main.ml
-+ ocamlfind ocamlc -c -package ounit2 -package ANSITerminal -o main.cmo main.ml
-File "main.ml", line 81, characters 47-53:
-81 |     print_endline "Bye have a beautiful time"; exit 0;
-                                                    ^^^^^^
-Warning 21: this statement never returns (or has an unsound type.)
-File "main.ml", line 84, characters 47-53:
-84 |     print_endline "Bye have a beautiful time"; exit 0;
-                                                    ^^^^^^
-Warning 21: this statement never returns (or has an unsound type.)
 # Target: game.ml.depends, tags: { package(ANSITerminal), package(ounit2), extension:ml, file:game.ml, ocaml, ocamldep, quiet, traverse }
 ocamlfind ocamldep -package ounit2 -package ANSITerminal -modules game.ml > game.ml.depends # cached
 # Target: game.cmo, tags: { package(ANSITerminal), package(ounit2), byte, compile, extension:cmo, extension:ml, file:game.cmo, file:game.ml, implem, ocaml, quiet, traverse }
