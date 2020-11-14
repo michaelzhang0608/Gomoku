@@ -20,8 +20,7 @@ let rec play_again board p1 p2 =
 
 let victory board p1 p2 winner= 
   Game.print_color board;
-  print_endline ("Congratulations! Player " ^ 
-                 string_of_int (Game.get_id winner) ^ " has won!");
+  print_endline ("Congratulations! " ^ (Game.get_id winner) ^ " has won!");
   if p1 = winner then 
     play_again (clear_board board) p1 p2
   else 
@@ -94,6 +93,8 @@ let color_kwords =
   [("Red", [red]); ("Magenta", [magenta]); ("Yellow", [yellow]); 
    ("Green", [green]); ("Blue", [blue]); ("Black", [black])]
 
+let colors = ["Red";"Magenta"; "Yellow";"Green"; "Blue"; "Black"]
+
 let p2_colors c1 colors acc = 
   let rec create_colors c1 colors acc = 
     match colors with
@@ -112,18 +113,28 @@ let print_command player lst=
   print_string [white] ">"
 
 
-let get_color () = 
+let rec get_color () = 
   print_command 1 color_kwords;
   let color1 = (read_line ()) in
-  let colors2 = p2_colors color1 color_kwords [] in
-  print_command 2 (colors2);
-  let color2 = (read_line ()) in
-  let color_list = [color1; color2] in
-  let rec convert_color lst = 
-    match lst with
-    | [] -> []
-    | h :: t -> find h color_map :: convert_color t in
-  convert_color color_list
+  if color1 = "quit" then exit 0;
+  if List.mem color1 colors = false then begin
+    print_endline "Invalid color try again"; 
+    get_color (); end
+  else  
+    let colors2 = p2_colors color1 color_kwords [] in
+    print_command 2 (colors2);
+    let color2 = (read_line ()) in
+    if color2 = "quit" then exit 0;
+    if List.mem color2 colors = false then begin
+      print_endline "Invalid color try again"; 
+      get_color (); end
+    else
+      let color_list = [color1; color2] in
+      let rec convert_color lst = 
+        match lst with
+        | [] -> []
+        | h :: t -> find h color_map :: convert_color t in
+      convert_color color_list
 
 
 
@@ -165,19 +176,30 @@ let rec move (board : string array array) (p1: player) (p2:player) =
        move board new_p1 new_p2;)
 
 
+let get_names () = 
+  print_endline "Enter the name of player 1";
+  let player1 = read_line() in
+  if player1 = "quit" then exit 0;
+  print_endline "Enter the name of player 2";
+  let player2 = read_line() in
+  if player2 = "quit" then exit 0;
+  [player1;player2]
+
 
 let play_game length =
   let board = Array.make_matrix length length " + " in
   let color_list = get_color () in
   let color1 = List.nth color_list 0 in
   let color2 = List.nth color_list 1 in
+  let names = get_names() in
   let (player1:player) = 
-    {id = 1; games_won= 0;is_turn = true; color = color1} in
+    {id = (List.nth names 0); games_won= 0;is_turn = true; color = color1} in
   let (player2:player) = 
-    {id = 2; games_won = 0; is_turn = false; color = color2} in
+    {id = (List.nth names 1); games_won = 0; is_turn = false; color = color2} in
   print_endline "These are how the coordinates work: ";
   print_coordinates length;
   move board player1 player2
+
 
 (** [main ()] prompts for the game to play, then starts it. *)
 let main () =

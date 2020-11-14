@@ -3,7 +3,7 @@ type board = string array array
 type score
 
 type player = {
-  id: int;
+  id: string;
   games_won: int;
   is_turn: bool;
   color: string
@@ -49,8 +49,10 @@ val update_score : score -> score
 
 val get_turn: player -> bool
 
-val get_id: player -> int
+val get_id: player -> string
 
 val update_games_won: player -> player
 
 val change_turn: player -> player
+
+val reset_board: board -> unit
