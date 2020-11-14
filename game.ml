@@ -32,8 +32,12 @@ type game = {
 let print_color (board: board)  = 
   let print_line (line: string array) = 
     let print_piece (piece: string)  = 
-      if piece = " B " then print_string [magenta] " O "
-      else if piece = " W " then print_string [yellow] " O "
+      if piece = " M " then print_string [magenta] " O "
+      else if piece = " B " then print_string [blue] " O "
+      else if piece = " G " then print_string [green] " O "
+      else if piece = " R " then print_string [red] " O "
+      else if piece = " Y " then print_string [yellow] " O "
+      else if piece = " X " then print_string [black] " O "
       else print_string [white] " + " in
     for index = 0  to Array.length line - 1 do 
       print_piece (Array.get line index) 
@@ -98,3 +102,19 @@ let change_turn player =
   if get_turn player = true then 
     {player with is_turn = false}
   else {player with is_turn = true}
+
+let reset_board (b : board) =
+  let reset_line i ln = 
+    for j = 0 to Array.length ln - 1 do 
+      Array.set ln j " + "
+    done;
+    Array.set b i ln in
+  Array.iteri (fun i line -> reset_line i line) b
+
+let reset_board (b : board) =
+  let reset_line i ln = 
+    for j = 0 to Array.length ln - 1 do 
+      Array.set ln j " + "
+    done;
+    Array.set b i ln in
+  Array.iteri (fun i line -> reset_line i line) b

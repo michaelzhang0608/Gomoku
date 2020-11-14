@@ -54,3 +54,5 @@ val get_id: player -> int
 val update_games_won: player -> player
 
 val change_turn: player -> player
+
+val reset_board: board -> unit
