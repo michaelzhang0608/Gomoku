@@ -93,6 +93,8 @@ let color_kwords =
   [("Red", [red]); ("Magenta", [magenta]); ("Yellow", [yellow]); 
    ("Green", [green]); ("Blue", [blue]); ("Black", [black])]
 
+let colors = ["Red";"Magenta"; "Yellow";"Green"; "Blue"; "Black"]
+
 let p2_colors c1 colors acc = 
   let rec create_colors c1 colors acc = 
     match colors with
@@ -111,18 +113,28 @@ let print_command player lst=
   print_string [white] ">"
 
 
-let get_color () = 
+let rec get_color () = 
   print_command 1 color_kwords;
   let color1 = (read_line ()) in
-  let colors2 = p2_colors color1 color_kwords [] in
-  print_command 2 (colors2);
-  let color2 = (read_line ()) in
-  let color_list = [color1; color2] in
-  let rec convert_color lst = 
-    match lst with
-    | [] -> []
-    | h :: t -> find h color_map :: convert_color t in
-  convert_color color_list
+  if color1 = "quit" then exit 0;
+  if List.mem color1 colors = false then begin
+    print_endline "Invalid color try again"; 
+    get_color (); end
+  else  
+    let colors2 = p2_colors color1 color_kwords [] in
+    print_command 2 (colors2);
+    let color2 = (read_line ()) in
+    if color2 = "quit" then exit 0;
+    if List.mem color2 colors = false then begin
+      print_endline "Invalid color try again"; 
+      get_color (); end
+    else
+      let color_list = [color1; color2] in
+      let rec convert_color lst = 
+        match lst with
+        | [] -> []
+        | h :: t -> find h color_map :: convert_color t in
+      convert_color color_list
 
 
 
@@ -167,8 +179,10 @@ let rec move (board : string array array) (p1: player) (p2:player) =
 let get_names () = 
   print_endline "Enter the name of player 1";
   let player1 = read_line() in
+  if player1 = "quit" then exit 0;
   print_endline "Enter the name of player 2";
   let player2 = read_line() in
+  if player2 = "quit" then exit 0;
   [player1;player2]
 
 
