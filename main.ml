@@ -49,7 +49,9 @@ let rec get_x_coordinate length =
   print_string [white] "> ";
   try 
     let x = read_line() in
-    if x = "quit" then -1
+    if x = "quit" then begin 
+      print_endline "Bye have a beautiful time";
+      exit 0; end
     else 
       let x = Stdlib.int_of_string (x) in
       if x < 0 || x > (length - 1) then 
@@ -66,9 +68,11 @@ let rec get_y_coordinate length =
   print_string [white] "> ";
   try 
     let y = read_line () in
-    if y = "quit" then -1
+    if y = "quit" then begin
+      print_endline "Bye have a beautiful time";
+      exit 0; end
     else 
-      let y = Stdlib.int_of_string (read_line ()) in
+      let y = Stdlib.int_of_string (y) in
       if y < 0 || y > (length - 1) then 
         get_x_coordinate length
       else y
@@ -126,11 +130,7 @@ let get_color () =
 let rec move (board : string array array) (p1: player) (p2:player) = 
   Game.print_color board;
   let x = get_x_coordinate (Array.length board) in
-  if x = -1 then 
-    print_endline "Bye have a beautiful time"; exit 0;
   let y = get_y_coordinate (Array.length board) in
-  if y = -1 then 
-    print_endline "Bye have a beautiful time"; exit 0;
   if Game.get_turn p1 then 
     (Game.make_move board x y p1; 
      if Game.check_tie board then
