@@ -10,7 +10,7 @@ type score = {
 }
 
 type player = {
-  id: int;
+  id: string;
   games_won: int;
   is_turn: bool;
   color: string
