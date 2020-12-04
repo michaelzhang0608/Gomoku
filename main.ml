@@ -1,6 +1,7 @@
 open Sys
 open Game
 open ANSITerminal
+open Go
 
 let create_board dimension = 
   Array.make_matrix dimension dimension " - "
@@ -138,42 +139,42 @@ let rec get_color () =
 
 
 
-let rec move (board : string array array) (p1: player) (p2:player) = 
+let rec move (board : string array array) (p1: Game.player) (p2:Game.player) = 
   Game.print_color board;
   let x = get_x_coordinate (Array.length board) in
   let y = get_y_coordinate (Array.length board) in
   if Game.get_turn p1 then 
-    (Game.make_move board x y p1; 
-     if Game.check_tie board then
-       (if tie board p1 p2 then 
-          move (clear_board board) p1 p2
-        else print_endline "Bye have a beautiful time"; exit 0; ) 
-     else
-     if Game.check_victor board (y - 1) (x - 1)= true then 
-       (if victory board p1 p2 p1 then 
-          let new_p1 = Game.update_games_won p1 in 
-          move (clear_board board) new_p1 p2;
-        else print_endline "Bye have a beautiful time"; exit 0; )
-     else 
-       let new_p1 = Game.change_turn p1 in
-       let new_p2 = Game.change_turn p2 in
-       move board new_p1 new_p2;)
+    let p1 = (Game.make_move board x y p1) in
+    if Game.check_tie board then
+      (if tie board p1 p2 then 
+         move (clear_board board) p1 p2
+       else print_endline "Bye have a beautiful time"; exit 0; ) 
+    else
+    if Game.check_victor board (y - 1) (x - 1)= true then 
+      (if victory board p1 p2 p1 then 
+         let new_p1 = Game.update_games_won p1 in 
+         move (clear_board board) new_p1 p2;
+       else print_endline "Bye have a beautiful time"; exit 0; )
+    else 
+      let new_p1 = Game.change_turn p1 in
+      let new_p2 = Game.change_turn p2 in
+      move board new_p1 new_p2;
   else 
-    (Game.make_move board x y p2;
-     if Game.check_tie board then
-       (if tie board p1 p2 then 
-          move (clear_board board) p1 p2
-        else print_endline "Bye have a beautiful time"; exit 0; ) 
-     else
-     if Game.check_victor board (y - 1) (x - 1)= true then
-       (if victory board p1 p2 p2 then 
-          let new_p2 = Game.update_games_won p2 in
-          move (clear_board board) p1 new_p2;
-        else print_endline "Bye have a beautiful time"; exit 0;)
-     else 
-       let new_p1 = Game.change_turn p1 in
-       let new_p2 = Game.change_turn p2 in
-       move board new_p1 new_p2;)
+    let p2 = Game.make_move board x y p2 in
+    if Game.check_tie board then
+      (if tie board p1 p2 then 
+         move (clear_board board) p1 p2
+       else print_endline "Bye have a beautiful time"; exit 0; ) 
+    else
+    if Game.check_victor board (y - 1) (x - 1)= true then
+      (if victory board p1 p2 p2 then 
+         let new_p2 = Game.update_games_won p2 in
+         move (clear_board board) p1 new_p2;
+       else print_endline "Bye have a beautiful time"; exit 0;)
+    else 
+      let new_p1 = Game.change_turn p1 in
+      let new_p2 = Game.change_turn p2 in
+      move board new_p1 new_p2
 
 
 let get_names () = 
@@ -192,10 +193,12 @@ let play_game length =
   let color1 = List.nth color_list 0 in
   let color2 = List.nth color_list 1 in
   let names = get_names() in
-  let (player1:player) = 
-    {id = (List.nth names 0); games_won= 0;is_turn = true; color = color1} in
-  let (player2:player) = 
-    {id = (List.nth names 1); games_won = 0; is_turn = false; color = color2} in
+  let (player1:Game.player) = 
+    {id = (List.nth names 0); games_won= 0;is_turn = true; color = color1; 
+     last_move = [-1; -1]} in
+  let (player2:Game.player) = 
+    {id = (List.nth names 1); games_won = 0; is_turn = false; color = color2; 
+     last_move = [-1; -1]} in
   print_endline "These are how the coordinates work: ";
   print_coordinates length;
   move board player1 player2
@@ -217,6 +220,42 @@ let main () =
       print_endline "Bye have a beautiful time";
       exit 0 in
   get_length ()
+
+
+let rec bot_test board player bot=
+  let x = int_of_string (read_line()) in
+  let y = int_of_string (read_line()) in
+  let new_player = (Game.make_move board x y player) in
+  Game.print_color board;
+  print_endline "";
+  match Bot.get_optimal_move board player bot with
+  | (x,y) -> 
+    let new_bot = Game.make_move board x y bot in
+    Game.print_color board;
+    bot_test board new_player new_bot;;
+
+
+
+let s () = 
+  let board = create_board 13 in
+  let player = {id = "hi"; games_won= 0;is_turn = true; color = " M "; 
+                last_move = [-1; -1]} in
+  let bot = {id = "AI"; games_won= 0;is_turn = true; color = " Y "; 
+             last_move = [-1; -1]} in
+  bot_test board player bot
+
+
+(** let y () = 
+    let board = Go.create_board in
+    let player = {id="hi";games_won=0;is_turn=true;color= " M ";pieces = [];score = 0} in
+    let player2 = {id = "hi";games_won=0;is_turn=false;color=" G ";pieces = []; score = 0} in
+    let x = int_of_string (read_line()) in
+    let y = int_of_string (read_line()) in
+    let new_player = (Game.make_move board x y player) in
+    Game.print_color board;
+
+    player **)
+
 
 
 (* Execute the game engine. *)

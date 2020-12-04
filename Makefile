@@ -1,4 +1,4 @@
-MODULES=bot game main 
+MODULES=bot game main go
 OBJECTS=$(MODULES:=.cmo)
 TEST=test.byte
 OCAMLBUILD=ocamlbuild -use-ocamlfind -pkgs ANSITerminal

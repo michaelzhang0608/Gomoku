@@ -6,8 +6,10 @@ type player = {
   id: string;
   games_won: int;
   is_turn: bool;
-  color: string
+  color: string;
+  last_move: int list;
 }
+
 
 type player_id
 
@@ -24,11 +26,11 @@ val print_color : board -> unit
     The int [x] is the x coordinate of the board and the int [y] is the y
     coordinate of the board. The players must take turns to make moves to
     maintain the order between Player 1 and Player 2’s stones. *)
-val make_move : string array array -> int -> int -> player -> unit
+val make_move : string array array -> int -> int -> player -> player
 
 (** [check_victor board] is the bool if the game has a winner. The board [board]
     is the current board with all the players' moves. *)
-val  check_victor: string array array -> int -> int -> bool
+val  check_victor: 'a array array -> int -> int -> bool
 
 
 (** [check_tie board] is the bool if the game has resulted in a tie. The board 
@@ -56,3 +58,5 @@ val update_games_won: player -> player
 val change_turn: player -> player
 
 val reset_board: board -> unit
+
+val dfs: 'a array array -> int -> int -> int -> 'a -> string -> int
