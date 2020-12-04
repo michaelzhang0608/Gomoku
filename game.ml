@@ -13,8 +13,11 @@ type player = {
   id: string;
   games_won: int;
   is_turn: bool;
-  color: string
+  color: string;
+  last_move: int list;
 }
+
+
 
 type game = {
   id: int;
@@ -44,11 +47,13 @@ let print_color (board: board)  =
     done in
   Array.iter (fun line -> print_line line; print_endline " ") board
 
-let make_move board x y (player: player)= 
+let make_move board x y player = 
   let piece = player.color in
   let line = Array.get board (y - 1) in
   Array.set line (x - 1) piece;
-  Array.set board (y - 1) line;;
+  Array.set board (y - 1) line;
+  {player with last_move = [x;y]}
+
 
 
 let rec dfs board x y acc color dir= 
