@@ -51,8 +51,8 @@ let make_move board x y player =
   let piece = player.color in
   let line = Array.get board (y - 1) in
   Array.set line (x - 1) piece;
-  Array.set board (y - 1) line;
-  {player with last_move = [x;y]}
+  Array.set board (y - 1) line;;
+
 
 
 
@@ -83,13 +83,13 @@ let check_victor board x y =
 
 let check_tie board = 
   (Array.for_all (fun line ->
-       Array.for_all ((<>) " + ") line) board)
+       Array.for_all (fun element -> element <> " - ") line) board)
 
 let print_winner winner = 
   failwith "unimplemented"
 
-let update_score score = 
-  failwith "unimplemented"
+let update_score winner = 
+  {winner with games_won = winner.games_won + 1}
 
 let get_turn player = 
   player.is_turn
@@ -111,15 +111,7 @@ let change_turn player =
 let reset_board (b : board) =
   let reset_line i ln = 
     for j = 0 to Array.length ln - 1 do 
-      Array.set ln j " + "
-    done;
-    Array.set b i ln in
-  Array.iteri (fun i line -> reset_line i line) b
-
-let reset_board (b : board) =
-  let reset_line i ln = 
-    for j = 0 to Array.length ln - 1 do 
-      Array.set ln j " + "
+      Array.set ln j " - "
     done;
     Array.set b i ln in
   Array.iteri (fun i line -> reset_line i line) b

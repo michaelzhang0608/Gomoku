@@ -63,11 +63,11 @@ let rec dfs board x y enemy=
 
 (* score points *)
 let rec dfs2  board x y player = 
-  if Array.get (Array.get board (x)) (y) <> " - " then begin
+  if Array.get (Array.get board (x)) (y) <> " + " then begin
     if Array.get (Array.get board (x)) (y) = player.color then true else false end
   else if x < 0 || x > 18 || y < 0 || y > 18 then true
-  else dfs board (x + 1) y player || dfs board x (y+1) player || 
-       dfs board (x-1) y player || dfs board x (y-1) player
+  else dfs2 board (x + 1) y player && dfs2 board x (y+1) player &&
+       dfs2 board (x-1) y player && dfs2 board x (y-1) player
 
 
 
@@ -98,8 +98,8 @@ let capture_pieces2 x y board player2=
   List.iter iter_function player2.pieces 
 
 let rec get_empty_spots board acc x y = 
-  if x  = Array.length board  then acc
-  else if Array.get(Array.get board (x)) (y) = " - " then 
+  if x = Array.length board  then acc
+  else if Array.get(Array.get board (x)) (y) = " + " then 
     if y = Array.length board - 1 then 
       get_empty_spots board (acc @ [(x,y)]) (x + 1) 0
     else get_empty_spots board (acc @ [(x,y)]) x (y + 1)
@@ -120,9 +120,23 @@ let find_winner board player1 player2=
     | (x, y) -> 
       if dfs2 board x y player2 then 1
       else 0 in
-  let p1 = List.map map_function empties in
-  let p2 = List.map map_function2 empties in 
-  let p1 = List.filter (fun x -> x = 1) p1 in
-  let p2 = List.filter (fun x -> x = 1) p2 in
-  if List.length p1 > List.length p2 then player1
+  let p1 = List.filter (fun x -> x = 1) (List.map map_function empties) in
+  let p2 = List.filter (fun x -> x = 1) (List.map map_function2 empties) in
+  let map_function3 element = 
+    match element with
+    | (x, y) -> 
+      if Array.get (Array.get board x) y = "XX" then 1
+      else 0 in
+  let map_function4 element = 
+    match element with
+    | (x, y) -> 
+      if Array.get (Array.get board x) y = "YY" then 1
+      else 0 in
+  let captured_pieces = List.filter (fun x -> x = 1) 
+      (List.map map_function3 empties) in
+  let captured_pieces2 = List.filter (fun x -> x = 1) 
+      (List.map map_function4 empties) in
+  let score1 = List.length p1 - List.length captured_pieces in
+  let score2 = List.length p2 - List.length captured_pieces2 in
+  if score1 > score2 then player1
   else player2
