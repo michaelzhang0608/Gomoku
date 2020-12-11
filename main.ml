@@ -2,6 +2,7 @@ open Sys
 open Game
 open ANSITerminal
 open Go
+open Random
 
 let create_board dimension = 
   Array.make_matrix dimension dimension " - "
@@ -15,17 +16,25 @@ let rec play_again board p1 p2 =
   match read_line () with
   | command -> 
     if command <> "Y" && command <> "N" && command <> "quit" then 
+      let p1 = {p1 with last_move = [-1;-1]} in
+      let p2 = {p2 with last_move = [-1;-1]} in
       play_again board p1 p2
     else if command = "Y" then true
     else false
 
-let victory board p1 p2 winner= 
+let victory board p1 (p2: Game.player) winner= 
   Game.print_color board;
-  print_endline ("Congratulations! " ^ (Game.get_id winner) ^ " has won!");
-  if p1 = winner then 
-    play_again (clear_board board) p1 p2
-  else 
-    play_again (clear_board board) p1 p2
+  print_endline ((Game.get_id winner) ^ " has won!");
+  if p1 = winner then begin
+    print_endline "Score";
+    print_endline (p1.id ^ ": " ^ (string_of_int (p1.games_won + 1)));
+    print_endline (p2.id ^ ": " ^ (string_of_int p2.games_won));
+    play_again (clear_board board) p1 p2 end
+  else begin
+    print_endline "Score";
+    print_endline (p2.id ^ ": " ^ (string_of_int (p2.games_won + 1)));
+    print_endline (p1.id ^ ": " ^ (string_of_int p1.games_won));
+    play_again (clear_board board) p1 p2 end
 
 let tie board p1 p2 = 
   Game.print_color board;
@@ -45,13 +54,15 @@ let print_coordinates length =
 
 let rec get_x_coordinate length = 
   print_endline "Please enter the horizontal coordinate you want
-  to place your piece in";
+    to place your piece in";
   print_string [white] "> ";
   try 
     let x = read_line() in
     if x = "quit" then begin 
       print_endline "Bye have a beautiful time";
       exit 0; end
+    else if x = "save" then 
+      -1
     else 
       let x = Stdlib.int_of_string (x) in
       if x < 0 || x > (length - 1) then 
@@ -64,13 +75,15 @@ let rec get_x_coordinate length =
 
 let rec get_y_coordinate length = 
   print_endline "Please enter the vertical coordinate you want
-  to place your piece in";
+    to place your piece in";
   print_string [white] "> ";
   try 
     let y = read_line () in
     if y = "quit" then begin
       print_endline "Bye have a beautiful time";
       exit 0; end
+    else if y = "save" then 
+      -1
     else 
       let y = Stdlib.int_of_string (y) in
       if y < 0 || y > (length - 1) then 
@@ -105,8 +118,11 @@ let p2_colors c1 colors acc =
   List.rev (create_colors c1 color_kwords [])
 
 let print_command player lst= 
-  print_endline 
-    ("Player " ^ string_of_int player ^ ", choose the color of your stone: \n");
+  if player = 0 then 
+    print_endline ("Choose the color of your stone: \n")
+  else 
+    print_endline 
+      ("Player " ^ string_of_int player ^ ", choose the color of your stone: \n");
   for index = 0  to List.length lst - 1 do 
     print_string (snd (List.nth lst index)) (fst (List.nth lst index) ^ " ")
   done;
@@ -137,44 +153,27 @@ let rec get_color () =
         | h :: t -> find h color_map :: convert_color t in
       convert_color color_list
 
+let rec get_bot_color () = 
+  print_command 0 color_kwords;
+  let color = read_line() in
+  if color = "quit" then exit 0;
+  if List.mem color colors = false then begin
+    print_endline "Invalid color try again"; 
+    get_color (); end
+  else begin
+    let rec get_bot_color () = 
+      let color_index = Random.int 6 in
+      let bot_color = List.nth colors color_index in
+      if bot_color = color then get_bot_color ()
+      else begin
+        let color_list = [color;bot_color] in
+        let rec convert_color lst = 
+          match lst with
+          | [] -> []
+          | h :: t -> find h color_map :: convert_color t in
+        convert_color color_list end in
+    get_bot_color () end
 
-
-let rec move (board : string array array) (p1: Game.player) (p2:Game.player) = 
-  Game.print_color board;
-  let x = get_x_coordinate (Array.length board) in
-  let y = get_y_coordinate (Array.length board) in
-  if Game.get_turn p1 then 
-    let p1 = (Game.make_move board x y p1) in
-    if Game.check_tie board then
-      (if tie board p1 p2 then 
-         move (clear_board board) p1 p2
-       else print_endline "Bye have a beautiful time"; exit 0; ) 
-    else
-    if Game.check_victor board (y - 1) (x - 1)= true then 
-      (if victory board p1 p2 p1 then 
-         let new_p1 = Game.update_games_won p1 in 
-         move (clear_board board) new_p1 p2;
-       else print_endline "Bye have a beautiful time"; exit 0; )
-    else 
-      let new_p1 = Game.change_turn p1 in
-      let new_p2 = Game.change_turn p2 in
-      move board new_p1 new_p2;
-  else 
-    let p2 = Game.make_move board x y p2 in
-    if Game.check_tie board then
-      (if tie board p1 p2 then 
-         move (clear_board board) p1 p2
-       else print_endline "Bye have a beautiful time"; exit 0; ) 
-    else
-    if Game.check_victor board (y - 1) (x - 1)= true then
-      (if victory board p1 p2 p2 then 
-         let new_p2 = Game.update_games_won p2 in
-         move (clear_board board) p1 new_p2;
-       else print_endline "Bye have a beautiful time"; exit 0;)
-    else 
-      let new_p1 = Game.change_turn p1 in
-      let new_p2 = Game.change_turn p2 in
-      move board new_p1 new_p2
 
 
 let get_names () = 
@@ -187,8 +186,171 @@ let get_names () =
   [player1;player2]
 
 
+let get_name () = 
+  print_endline "Enter the name of your player";
+  let human = read_line () in
+  if human = "quit" then exit 0;
+  human
+
+
+let save_game (board : string array array) = 
+  let fold_function acc lst = 
+    acc @ [(Array.to_list lst)] in
+  let lst = Array.fold_left fold_function [] board in
+  Csv.save "board.csv" lst
+
+let save_human_players (player1: Game.player) (player2 : Game.player) = 
+  let lst1 = [player1.id;string_of_int(player1.games_won);
+              if player1.is_turn then "true" else "false";player1.color;
+              string_of_int (List.nth (player1.last_move) 0);
+              string_of_int (List.nth (player1.last_move )1)] in
+  let lst2 = [player2.id;string_of_int(player2.games_won);
+              if player2.is_turn then "true" else "false";player2.color;
+              string_of_int (List.nth (player2.last_move) 0);
+              string_of_int (List.nth (player2.last_move )1)] in
+  Csv.save "players.csv" ([lst1] @ [lst2])
+
+let save_bot_players (player: Game.player) (bot: Game.player) bool = 
+  let lst1 = [player.id;string_of_int(player.games_won);
+              if player.is_turn then "true" else "false";player.color;
+              string_of_int (List.nth (player.last_move) 0);
+              string_of_int (List.nth (player.last_move )1); 
+              if bool then "true" else "false"] in
+  let lst2 = [bot.id;string_of_int(player.games_won);
+              if bot.is_turn then "true" else "false";bot.color;
+              string_of_int (List.nth (bot.last_move) 0);
+              string_of_int (List.nth (bot.last_move )1); 
+              if bool then "true" else "false"] in
+  Csv.save "players.csv" ([lst1] @ [lst2])
+
+
+let rec move (board : string array array) (p1: Game.player) (p2:Game.player) = 
+  Game.print_color board;
+  let x = get_x_coordinate (Array.length board) in
+  if x = -1 then begin
+    print_endline "Bye";
+    save_human_players p1 p2;
+    save_game board;
+    exit 0; end
+  else let y = get_y_coordinate (Array.length board) in
+    if Game.get_turn p1 then begin
+      Game.make_move board x y p1;
+      let p1 = {p1 with last_move = [x;y]} in 
+      if Game.check_tie board then
+        (if tie board p1 p2 then 
+           move (clear_board board) p1 p2
+         else print_endline "Bye have a beautiful time"; exit 0; ) 
+      else if Game.check_victor board (y - 1) (x - 1)= true then 
+        (if victory board p1 p2 p1 then 
+           let new_p1 = Game.update_games_won p1 in 
+           move (clear_board board) new_p1 p2;
+         else print_endline "Bye have a beautiful time"; exit 0; )
+      else 
+        let new_p1 = Game.change_turn p1 in
+        let new_p2 = Game.change_turn p2 in
+        move board new_p1 new_p2; end
+    else 
+      let p2 = {p2 with last_move = [x;y]} in
+      Game.make_move board x y p2;
+      if Game.check_tie board then
+        (if tie board p1 p2 then 
+           move (clear_board board) p1 p2
+         else print_endline "Bye have a beautiful time"; exit 0; ) 
+      else
+      if Game.check_victor board (y - 1) (x - 1)= true then
+        (if victory board p1 p2 p2 then 
+           let new_p2 = Game.update_games_won p2 in
+           move (clear_board board) p1 new_p2;
+         else print_endline "Bye have a beautiful time"; exit 0;)
+      else 
+        let new_p1 = Game.change_turn p1 in
+        let new_p2 = Game.change_turn p2 in
+        move board new_p1 new_p2 
+
+
+let rec play_with_bot board player bot bool who_goes_first= 
+  if bool then begin
+    Game.print_color board;
+    let x = get_x_coordinate (Array.length board) in
+    if x = -1 then begin
+      print_endline "Bye";
+      save_bot_players player bot who_goes_first;
+      save_game board;
+      exit 0; end
+    else 
+      let y = get_y_coordinate (Array.length board) in
+      if Array.get (Array.get board (y - 1)) (x - 1) <> " - " then  begin
+        print_endline "Invalid move";
+        play_with_bot board player bot bool who_goes_first end
+      else 
+        Game.make_move board x y player;
+      let new_player = {player with last_move = [x;y]} in 
+      if Game.check_tie board then begin
+        if tie board new_player bot then 
+          play_with_bot (clear_board board) new_player bot bool who_goes_first
+        else print_endline "Bye have a beautiful time"; exit 0; end
+      else if Game.check_victor board (y - 1) (x - 1)= true then begin
+        if victory board new_player bot new_player then 
+          let new_player = Game.update_games_won new_player in 
+          play_with_bot(clear_board board) 
+            new_player bot who_goes_first who_goes_first;
+        else print_endline "Bye have a beautiful time"; exit 0; end 
+      else 
+        let new_player = Game.change_turn new_player in
+        let bot = Game.change_turn bot in
+        play_with_bot board new_player bot new_player.is_turn who_goes_first end
+  else begin
+    match Bot.get_optimal_move board player bot  with
+    | (x,y) -> 
+      let new_bot = {bot with last_move = [x;y]} in
+      Game.make_move board (y + 1) (x + 1) bot;
+      if Game.check_tie board then begin
+        if tie board player new_bot then
+          play_with_bot (clear_board board) player new_bot bool who_goes_first
+        else print_endline "Bye have a beautiful time"; exit 0; end
+      else 
+      if Game.check_victor board x y = true then begin
+        if victory board new_bot player new_bot then
+          let new_bot = Game.update_games_won new_bot in
+          let new_bot = {new_bot with last_move = [-1;-1]} in
+          play_with_bot (clear_board board ) player new_bot 
+            who_goes_first who_goes_first;
+        else print_endline "Bye have a beautiful time"; exit 0;  end
+      else  
+        let new_bot = Game.change_turn new_bot in
+        let player= Game.change_turn player in
+        play_with_bot board player new_bot player.is_turn who_goes_first end
+
+
+let rec bot_game length=
+  let board = Array.make_matrix length length " - " in
+  let color_list = get_bot_color () in
+  let human_color = List.nth color_list 0 in
+  let bot_color = List.nth color_list 1 in
+  let name = get_name () in
+  let rec get_turn () = 
+    print_endline "Would you like to go first? (Y/N) ";
+    let ans = read_line() in
+    if ans = "Y" then 
+      let player = {id=name;games_won = 0;is_turn = true;color=human_color; 
+                    last_move = [-1;-1]} in
+      let bot = {id="Tarzan";games_won = 0;is_turn =false;color=bot_color;
+                 last_move=[-1;-1]} in
+      play_with_bot board player bot player.is_turn true
+    else if ans = "N" then 
+      let player = {id=name;games_won = 0;is_turn = false;color=human_color; 
+                    last_move = [-1;-1]} in
+      let bot = {id="Tarzan";games_won = 0;is_turn =true;color=bot_color;
+                 last_move=[-1;-1]} in
+      play_with_bot board player bot player.is_turn false
+    else if ans = "quit" then exit 0
+    else get_turn () in
+  get_turn ()
+
+
+
 let play_game length =
-  let board = Array.make_matrix length length " + " in
+  let board = Array.make_matrix length length " - " in
   let color_list = get_color () in
   let color1 = List.nth color_list 0 in
   let color2 = List.nth color_list 1 in
@@ -204,57 +366,101 @@ let play_game length =
   move board player1 player2
 
 
+
+let load_game name = 
+  let lst = Csv.load name in
+  let lst_to_board lst = 
+    Array.of_list (List.map Array.of_list lst) in
+  lst_to_board lst
+
+let load_players name = 
+  let lst = Csv.load name in
+  let player1_data = List.nth lst 0 in
+  let player1 = {id = List.nth player1_data 0; 
+                 games_won = int_of_string (List.nth player1_data 1); 
+                 is_turn = if List.nth player1_data 2 = "true" then true 
+                   else false; 
+                 color = List.nth player1_data 3; 
+                 last_move = [int_of_string(List.nth player1_data 4); 
+                              int_of_string(List.nth player1_data 5)]} in
+  let player2_data = List.nth lst 1 in
+  let player2 = {id = List.nth player2_data 0; 
+                 games_won = int_of_string (List.nth player2_data 1); 
+                 is_turn = if List.nth player2_data 2 = "true" 
+                   then true 
+                   else false; 
+                 color = List.nth player2_data 3; 
+                 last_move = [int_of_string(List.nth player2_data 4); 
+                              int_of_string(List.nth player2_data 5)]} in
+  if player1.id = "Tarzan" then begin
+    if List.nth player1_data 6 = "true" then 
+      (player1, true, player2, false, true)
+    else (player1, true, player2, false, false) end
+  else if player2.id = "Tarzan" then begin
+    if List.nth player2_data 6 = "true" then 
+      (player1, false, player2, true, true)
+    else (player1, false, player2, true, false) end
+  else (player1, false, player2, false, false)
+
+
+
+
+
+
+let rec get_length () = 
+  print_endline "Please enter the length of the board you want (13 or 15) \n";
+  print_string [white] "> ";
+  try let length = int_of_string (read_line()) in
+    if length <> 13 && length <> 15 then 
+      get_length ()
+    else begin
+      let rec choice () = 
+        print_endline "Will you be playing against our bot? (Y/N) ";
+        let ans  = read_line () in
+        if ans = "Y" then bot_game length
+        else if ans = "N" then play_game length
+        else if ans = "quit" then exit 0
+        else choice () in
+      choice () end
+  with Failure _ -> 
+    print_endline "Bye have a beautiful time";
+    exit 0 
+
 (** [main ()] prompts for the game to play, then starts it. *)
 let main () =
   ANSITerminal.(print_string [red]
                   "\n\nWelcome to our 3110 Final Project. Type 
-                  quit to exit the game anytime. \n");
-  let rec get_length () = 
-    print_endline "Please enter the length of the board you want (13 or 15) \n";
-    print_string [white] "> ";
-    try let length = int_of_string (read_line()) in
-      if length <> 13 && length <> 15 then 
-        get_length ()
-      else play_game length
-    with Failure _ -> 
-      print_endline "Bye have a beautiful time";
-      exit 0 in
-  get_length ()
+              quit to exit the game anytime, type save to save the current game.
+               \n");
+  let rec load () = 
+    print_endline "Do you want to load a previous game? (Y/N)";
+    let ans = read_line () in
+    if ans = "Y" then begin
+      print_endline "Enter the file name for the board";
+      let filename = read_line () in
+      try let board = load_game filename in 
+        print_endline "Enter the file name for the players";
+        let players = read_line () in
+        match load_players players with
+        |(one, false, two, false, _) -> move board one two
+        |(one, true, two, false, true) -> 
+          play_with_bot board two one two.is_turn true
+        | (one, true, two, false, false) -> 
+          play_with_bot board two one two.is_turn false
+        | (one, false, two, true, true) -> 
+          play_with_bot board one two one.is_turn true
+        | (one, false, two, true, false) -> 
+          play_with_bot board one two one.is_turn false 
+      with Failure _ -> load ()
+    end
+    else if ans = "N" then get_length ()
+    else load () in
+  load ()
 
-
-let rec bot_test board player bot=
-  let x = int_of_string (read_line()) in
-  let y = int_of_string (read_line()) in
-  let new_player = (Game.make_move board x y player) in
-  Game.print_color board;
-  print_endline "";
-  match Bot.get_optimal_move board player bot with
-  | (x,y) -> 
-    let new_bot = Game.make_move board x y bot in
-    Game.print_color board;
-    bot_test board new_player new_bot;;
-
-
-
-let s () = 
-  let board = create_board 13 in
-  let player = {id = "hi"; games_won= 0;is_turn = true; color = " M "; 
-                last_move = [-1; -1]} in
-  let bot = {id = "AI"; games_won= 0;is_turn = true; color = " Y "; 
-             last_move = [-1; -1]} in
-  bot_test board player bot
-
-
-(** let y () = 
-    let board = Go.create_board in
-    let player = {id="hi";games_won=0;is_turn=true;color= " M ";pieces = [];score = 0} in
-    let player2 = {id = "hi";games_won=0;is_turn=false;color=" G ";pieces = []; score = 0} in
-    let x = int_of_string (read_line()) in
-    let y = int_of_string (read_line()) in
-    let new_player = (Game.make_move board x y player) in
-    Game.print_color board;
-
-    player **)
+let print_board board = 
+  let print_line (line: string array) =  
+    Array.fold_left (fun acc x -> acc ^ x) "" line in
+  Array.iter(fun x -> print_endline (print_line x)) board
 
 
 

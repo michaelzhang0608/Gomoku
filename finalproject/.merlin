@@ -5,5 +5,4 @@ PKG str
 PKG unix
 PKG qcheck
 PKG ocamlbuild
-PKG csv
 PKG bisect_ppx-ocamlbuild

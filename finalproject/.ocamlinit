@@ -1,6 +1,5 @@
 #require "ounit2";;
 #require "ANSITerminal";;
-#require "csv";;
 #directory "_build";;
 #load "bot.cmo";;
 #load "game.cmo";;
