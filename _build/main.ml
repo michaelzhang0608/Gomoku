@@ -61,7 +61,8 @@ let rec get_x_coordinate length =
     if x = "quit" then begin 
       print_endline "Bye have a beautiful time";
       exit 0; end
-    else if x = "save" then -1
+    else if x = "save" then 
+      -1
     else 
       let x = Stdlib.int_of_string (x) in
       if x < 0 || x > (length - 1) then 
@@ -146,7 +147,8 @@ let rec get_color () =
       get_color (); end
     else
       let color_list = [color1; color2] in
-      let rec convert_color lst = match lst with
+      let rec convert_color lst = 
+        match lst with
         | [] -> []
         | h :: t -> find h color_map :: convert_color t in
       convert_color color_list
@@ -165,7 +167,8 @@ let rec get_bot_color () =
       if bot_color = color then get_bot_color ()
       else begin
         let color_list = [color;bot_color] in
-        let rec convert_color lst = match lst with
+        let rec convert_color lst = 
+          match lst with
           | [] -> []
           | h :: t -> find h color_map :: convert_color t in
         convert_color color_list end in
@@ -320,7 +323,7 @@ let rec play_with_bot board player bot bool who_goes_first=
 
 
 let rec bot_game length=
-  let board = create_board length in
+  let board = Array.make_matrix length length " - " in
   let color_list = get_bot_color () in
   let human_color = List.nth color_list 0 in
   let bot_color = List.nth color_list 1 in
@@ -332,7 +335,7 @@ let rec bot_game length=
       let player = {id=name;games_won = 0;is_turn = true;color=human_color; 
                     last_move = [-1;-1]} in
       let bot = {id="Tarzan";games_won = 0;is_turn =false;color=bot_color;
-                 last_move=[-1;-1]} in 
+                 last_move=[-1;-1]} in
       play_with_bot board player bot player.is_turn true
     else if ans = "N" then 
       let player = {id=name;games_won = 0;is_turn = false;color=human_color; 
@@ -341,7 +344,8 @@ let rec bot_game length=
                  last_move=[-1;-1]} in
       play_with_bot board player bot player.is_turn false
     else if ans = "quit" then exit 0
-    else get_turn () in get_turn ()
+    else get_turn () in
+  get_turn ()
 
 
 
