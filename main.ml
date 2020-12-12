@@ -4,12 +4,6 @@ open ANSITerminal
 open Go
 open Random
 
-let create_board dimension = 
-  Array.make_matrix dimension dimension " - "
-
-let clear_board board = 
-  create_board (Array.length board) 
-
 let rec play_again board p1 p2 =  
   print_endline "Would you like to play again? (Y/N)";
   print_string [white] "> ";
@@ -69,7 +63,8 @@ let rec get_x_coordinate length =
         get_x_coordinate length
       else x
   with Failure _ -> 
-    print_string [white] "Invalid input, try again.";
+    print_string [red] "Invalid input, try again.";
+    print_endline "";
     print_string [white] "> ";
     get_x_coordinate length
 
@@ -90,32 +85,17 @@ let rec get_y_coordinate length =
         get_x_coordinate length
       else y
   with Failure _ -> 
-    print_string [white] "Invalid input, try again.";
+    print_string [red] "Invalid input, try again.";
+    print_endline "";
     print_string [white] "> ";
     get_y_coordinate length
 
 
-let rec find k (d : (string * string) list) =
-  match d with 
-  | [] -> " W "
-  | (k', v') :: tail -> if k = k' then v' else find k tail
-
-let color_map = [("Red", " R "); ("Magenta", " M "); ("Yellow", " Y ");
-                 ("Green", " G "); ("Blue", " B "); ("Black", " X "); ]
-
 let color_kwords = 
-  [("Red", [red]); ("Magenta", [magenta]); ("Yellow", [yellow]); 
-   ("Green", [green]); ("Blue", [blue]); ("Black", [black])]
+  [("red", [red]); ("magenta", [magenta]); ("yellow", [yellow]); 
+   ("green", [green]); ("blue", [blue]); ("black", [black])]
 
-let colors = ["Red";"Magenta"; "Yellow";"Green"; "Blue"; "Black"]
-
-let p2_colors c1 colors acc = 
-  let rec create_colors c1 colors acc = 
-    match colors with
-    | [] -> acc
-    | h :: t -> if (fst h) = c1 then create_colors c1 t acc
-      else create_colors c1 t (h :: acc) in
-  List.rev (create_colors c1 color_kwords [])
+let colors = ["red";"magenta"; "yellow";"green"; "blue"; "black"]
 
 let print_command player lst= 
   if player = 0 then 
@@ -132,25 +112,27 @@ let print_command player lst=
 
 let rec get_color () = 
   print_command 1 color_kwords;
-  let color1 = (read_line ()) in
+  let color1 = String.lowercase_ascii (read_line ()) in
   if color1 = "quit" then exit 0;
   if List.mem color1 colors = false then begin
-    print_endline "Invalid color try again"; 
+    print_string [red] "Invalid color try again"; 
+    print_endline "";
     get_color (); end
   else  
-    let colors2 = p2_colors color1 color_kwords [] in
+    let colors2 = Game.available_colors color1 color_kwords [] in
     print_command 2 (colors2);
-    let color2 = (read_line ()) in
+    let color2 = String.lowercase_ascii (read_line ()) in
     if color2 = "quit" then exit 0;
     if List.mem color2 colors = false then begin
-      print_endline "Invalid color try again"; 
+      print_string [red] "Invalid color try again"; 
+      print_endline "";
       get_color (); end
     else
       let color_list = [color1; color2] in
       let rec convert_color lst = 
         match lst with
         | [] -> []
-        | h :: t -> find h color_map :: convert_color t in
+        | h :: t -> Game.find_color h :: convert_color t in
       convert_color color_list
 
 let rec get_bot_color () = 
@@ -158,7 +140,8 @@ let rec get_bot_color () =
   let color = read_line() in
   if color = "quit" then exit 0;
   if List.mem color colors = false then begin
-    print_endline "Invalid color try again"; 
+    print_string [red] "Invalid color try again"; 
+    print_endline "";
     get_color (); end
   else begin
     let rec get_bot_color () = 
@@ -170,7 +153,7 @@ let rec get_bot_color () =
         let rec convert_color lst = 
           match lst with
           | [] -> []
-          | h :: t -> find h color_map :: convert_color t in
+          | h :: t -> find_color h :: convert_color t in
         convert_color color_list end in
     get_bot_color () end
 
@@ -234,16 +217,21 @@ let rec move (board : string array array) (p1: Game.player) (p2:Game.player) =
     exit 0; end
   else let y = get_y_coordinate (Array.length board) in
     if Game.get_turn p1 then begin
-      Game.make_move board x y p1;
+      if Array.get (Array.get board (y - 1)) (x - 1) <> " - " then  begin
+        print_string [red] "Invalid move";
+        print_endline "";
+        move board p1 p2 end
+      else 
+        Game.make_move board x y p1;
       let p1 = {p1 with last_move = [x;y]} in 
       if Game.check_tie board then
         (if tie board p1 p2 then 
-           move (clear_board board) p1 p2
+           move (Game.clear_board board) p1 p2
          else print_endline "Bye have a beautiful time"; exit 0; ) 
       else if Game.check_victor board (y - 1) (x - 1)= true then 
         (if victory board p1 p2 p1 then 
            let new_p1 = Game.update_games_won p1 in 
-           move (clear_board board) new_p1 p2;
+           move (Game.clear_board board) new_p1 p2;
          else print_endline "Bye have a beautiful time"; exit 0; )
       else 
         let new_p1 = Game.change_turn p1 in
@@ -251,16 +239,21 @@ let rec move (board : string array array) (p1: Game.player) (p2:Game.player) =
         move board new_p1 new_p2; end
     else 
       let p2 = {p2 with last_move = [x;y]} in
-      Game.make_move board x y p2;
+      if Array.get (Array.get board (y - 1)) (x - 1) <> " - " then  begin
+        print_string [red] "Invalid move";
+        print_endline "";
+        move board p1 p2 end
+      else 
+        Game.make_move board x y p2;
       if Game.check_tie board then
         (if tie board p1 p2 then 
-           move (clear_board board) p1 p2
+           move (Game.clear_board board) p1 p2
          else print_endline "Bye have a beautiful time"; exit 0; ) 
       else
       if Game.check_victor board (y - 1) (x - 1)= true then
         (if victory board p1 p2 p2 then 
            let new_p2 = Game.update_games_won p2 in
-           move (clear_board board) p1 new_p2;
+           move (Game.clear_board board) p1 new_p2;
          else print_endline "Bye have a beautiful time"; exit 0;)
       else 
         let new_p1 = Game.change_turn p1 in
@@ -280,19 +273,20 @@ let rec play_with_bot board player bot bool who_goes_first=
     else 
       let y = get_y_coordinate (Array.length board) in
       if Array.get (Array.get board (y - 1)) (x - 1) <> " - " then  begin
-        print_endline "Invalid move";
+        print_string [red] "Invalid move";
+        print_endline "";
         play_with_bot board player bot bool who_goes_first end
       else 
         Game.make_move board x y player;
       let new_player = {player with last_move = [x;y]} in 
       if Game.check_tie board then begin
         if tie board new_player bot then 
-          play_with_bot (clear_board board) new_player bot bool who_goes_first
+          play_with_bot (Game.clear_board board) new_player bot bool who_goes_first
         else print_endline "Bye have a beautiful time"; exit 0; end
       else if Game.check_victor board (y - 1) (x - 1)= true then begin
         if victory board new_player bot new_player then 
           let new_player = Game.update_games_won new_player in 
-          play_with_bot(clear_board board) 
+          play_with_bot(Game.clear_board board) 
             new_player bot who_goes_first who_goes_first;
         else print_endline "Bye have a beautiful time"; exit 0; end 
       else 
@@ -306,14 +300,14 @@ let rec play_with_bot board player bot bool who_goes_first=
       Game.make_move board (y + 1) (x + 1) bot;
       if Game.check_tie board then begin
         if tie board player new_bot then
-          play_with_bot (clear_board board) player new_bot bool who_goes_first
+          play_with_bot (Game.clear_board board) player new_bot bool who_goes_first
         else print_endline "Bye have a beautiful time"; exit 0; end
       else 
       if Game.check_victor board x y = true then begin
         if victory board new_bot player new_bot then
           let new_bot = Game.update_games_won new_bot in
           let new_bot = {new_bot with last_move = [-1;-1]} in
-          play_with_bot (clear_board board ) player new_bot 
+          play_with_bot (Game.clear_board board ) player new_bot 
             who_goes_first who_goes_first;
         else print_endline "Bye have a beautiful time"; exit 0;  end
       else  
