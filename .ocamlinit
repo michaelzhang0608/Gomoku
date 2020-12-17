@@ -1,5 +1,7 @@
 #require "ounit2";;
 #require "ANSITerminal";;
+#require "bisect_ppx.runtime";;
+#require "str";;
 #require "csv";;
 #directory "_build";;
 #load "bot.cmo";;
