@@ -1,3 +1,10 @@
+(** 
+   Representation of the Gomoku game.
+
+   This module represents the board, players, moves that occur during the
+   game, winners, and functions that result in player moves.
+*)
+
 type board = string array array
 
 type score
@@ -46,6 +53,10 @@ val get_turn: player -> bool
     [player] represents a player in the game.  *)
 val get_id: player -> string
 
+(** [get_games_won player] is the int representing the number of games
+    this player has won. The player [player] represents a player in the game. *)
+val get_games_won: player -> int
+
 (** [update_score player] is the updated player [player] that shows how many 
     games the player has won thus far. The player [player] represents the 
     player who won the previous game that gets a point added to their score.  *)
@@ -66,16 +77,6 @@ val change_turn: player -> player
     The board [board] is the board with the players' moves. *)
 val reset_board: board -> unit
 
-(** [dfs board x y acc color dir] is the number of stones that are placed
-    adjacently, horizontally, vertically or diagonally. The board [board] is
-    the current board with the players' moves. The int [x] is the x coordinate
-    of the last move of the player who has the current turn. The int [y] is the 
-    y coordinate of the last move of the player who has the current turn.
-    The int [acc] is the accumulator to count the number of stones. The string
-    [color] is the color of a player's stones. The int [dir] is the direction
-    in which to search for the stones. *)
-val dfs: 'a array array -> int -> int -> int -> 'a -> string -> int
-
 (** [find_color color] is the string presentation of the color of a
     player's stones to be printed on the board. The string [color] is the 
     string representation for the color of a player's stones. *)
@@ -95,8 +96,23 @@ val clear_board: 'a array array -> string array array
     represented by [color1]. The string [color1] represents the color that 
     player 1 chose; therefore, player 2 cannot be allowed to choose the 
     same color.*)
-val available_colors: string ->
-  (string * ANSITerminal.style list) list ->
-  (string * ANSITerminal.style list) list -> 
-  (string * ANSITerminal.style list) list
+val available_colors: 'a -> ('a * 'b) list -> 'c -> ('a * 'b) list
 
+(** [load_game name] is the board saved on the CSV file. The string [name] 
+    represents the CSV file name. *)
+val load_game: string -> string array array
+
+(** [save_name board] updates the CSV file "board.csv" with the specified game
+    board. The string array array [board] represents the board that is to be
+    saved ont the CSV file. The dimensions of [board] must be 13 or 15,
+    comprised of empty spots or player moves. *)
+val save_game: string array array -> unit
+
+(** [load_players name] are the players saved on the CSV file. The string [name] 
+    represents the CSV file name. *)
+val load_players: string -> player * bool * player * bool * bool * string
+
+(** [save_human_players player1 player2] updates the CSV file "players.csv" with 
+    the two specified players. The player [player1] represents first player and
+    the player [player2] represents the second player in the game. *)
+val save_human_players: player -> player -> unit

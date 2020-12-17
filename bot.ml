@@ -1,8 +1,5 @@
 open Game
 
-
-
-
 let rec check_length (board: Game.board) x y dir color acc = 
   if x < 0 || x = Array.length board || y < 0 || y = Array.length board || 
      Array.get (Array.get board (x)) (y) <> color then acc
@@ -20,10 +17,6 @@ let rec check_length (board: Game.board) x y dir color acc =
       color (acc + 1)
   else check_length board (x + 1) (y - 1) "southwest"
       color (acc + 1)
-
-
-
-
 
 let make_temporary_move board x y (bot: Game.player)= 
   let piece = bot.color in
@@ -240,7 +233,20 @@ let get_optimal_move board player bot difficulty=
       (x,y)
 
 
-
+let save_bot_players (player: Game.player) (bot: Game.player) bool difficulty = 
+  let lst1 = [player.id;string_of_int(player.games_won);
+              if player.is_turn then "true" else "false";player.color;
+              string_of_int (List.nth (player.last_move) 0);
+              string_of_int (List.nth (player.last_move )1); 
+              if bool then "true" else "false";
+              difficulty] in
+  let lst2 = [bot.id;string_of_int(player.games_won);
+              if bot.is_turn then "true" else "false";bot.color;
+              string_of_int (List.nth (bot.last_move) 0);
+              string_of_int (List.nth (bot.last_move )1); 
+              if bool then "true" else "false";
+              difficulty] in
+  Csv.save "players.csv" ([lst1] @ [lst2])
 
 
 

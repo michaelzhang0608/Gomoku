@@ -1,7 +1,6 @@
 open Sys
 open Game
 open ANSITerminal
-open Go
 open Random
 
 let rec play_again board p1 p2 =  
@@ -173,48 +172,13 @@ let get_name () =
   if human = "quit" then exit 0;
   human
 
-
-let save_game (board : string array array) = 
-  let fold_function acc lst = 
-    acc @ [(Array.to_list lst)] in
-  let lst = Array.fold_left fold_function [] board in
-  Csv.save "board.csv" lst
-
-let save_human_players (player1: Game.player) (player2 : Game.player) = 
-  let lst1 = [player1.id;string_of_int(player1.games_won);
-              if player1.is_turn then "true" else "false";player1.color;
-              string_of_int (List.nth (player1.last_move) 0);
-              string_of_int (List.nth (player1.last_move )1)] in
-  let lst2 = [player2.id;string_of_int(player2.games_won);
-              if player2.is_turn then "true" else "false";player2.color;
-              string_of_int (List.nth (player2.last_move) 0);
-              string_of_int (List.nth (player2.last_move )1)] in
-  Csv.save "players.csv" ([lst1] @ [lst2])
-
-let save_bot_players (player: Game.player) (bot: Game.player) bool difficulty = 
-  let lst1 = [player.id;string_of_int(player.games_won);
-              if player.is_turn then "true" else "false";player.color;
-              string_of_int (List.nth (player.last_move) 0);
-              string_of_int (List.nth (player.last_move )1); 
-              if bool then "true" else "false";
-              difficulty] in
-  let lst2 = [bot.id;string_of_int(player.games_won);
-              if bot.is_turn then "true" else "false";bot.color;
-              string_of_int (List.nth (bot.last_move) 0);
-              string_of_int (List.nth (bot.last_move )1); 
-              if bool then "true" else "false";
-              difficulty] in
-  Csv.save "players.csv" ([lst1] @ [lst2])
-
-
-
 let rec move (board : string array array) (p1: Game.player) (p2:Game.player) = 
   Game.print_color board;
   let x = get_x_coordinate (Array.length board) in
   if x = -1 then begin
     print_endline "Bye";
-    save_human_players p1 p2;
-    save_game board;
+    Game.save_human_players p1 p2;
+    Game.save_game board;
     exit 0; end
   else let y = get_y_coordinate (Array.length board) in
     if Game.get_turn p1 then begin
@@ -261,17 +225,14 @@ let rec move (board : string array array) (p1: Game.player) (p2:Game.player) =
         let new_p2 = Game.change_turn p2 in
         move board new_p1 new_p2 
 
-
-
-
 let rec play_with_bot board player bot bool who_goes_first difficulty= 
   if bool then begin
     Game.print_color board;
     let x = get_x_coordinate (Array.length board) in
     if x = -1 then begin
       print_endline "Bye";
-      save_bot_players player bot who_goes_first difficulty;
-      save_game board;
+      Bot.save_bot_players player bot who_goes_first difficulty;
+      Game.save_game board;
       exit 0; end
     else 
       let y = get_y_coordinate (Array.length board) in
@@ -321,8 +282,6 @@ let rec play_with_bot board player bot bool who_goes_first difficulty=
         let player= Game.change_turn player in
         play_with_bot board player new_bot player.is_turn who_goes_first 
           difficulty end
-
-
 
 let rec difficulty_level () = 
   print_endline "Enter the bot difficulty: easy, medium, or hard ";
@@ -378,32 +337,6 @@ let play_game length =
 
 
 
-let load_game name = 
-  let lst = Csv.load name in
-  let lst_to_board lst = 
-    Array.of_list (List.map Array.of_list lst) in
-  lst_to_board lst
-
-let load_players name = 
-  let lst = Csv.load name in
-  let player1_data = List.nth lst 0 in
-  let player1 = {id = List.nth player1_data 0; 
-                 games_won = int_of_string (List.nth player1_data 1); 
-                 is_turn = bool_of_string(List.nth player1_data 2);
-                 color = List.nth player1_data 3; 
-                 last_move = [int_of_string(List.nth player1_data 4); 
-                              int_of_string(List.nth player1_data 5)]} in
-  let player2_data = List.nth lst 1 in
-  let player2 = {id = List.nth player2_data 0; 
-                 games_won = int_of_string (List.nth player2_data 1); 
-                 is_turn = bool_of_string (List.nth player2_data 2);
-                 color = List.nth player2_data 3; 
-                 last_move = [int_of_string(List.nth player2_data 4); 
-                              int_of_string(List.nth player2_data 5)]} in
-  if bool_of_string (List.nth player2_data 6) then 
-    (player1, false, player2, true, true, List.nth player2_data 7)
-  else (player1, false, player2, true, false, List.nth player2_data 7) 
-
 
 
 let rec get_length () = 
@@ -432,13 +365,16 @@ let main () =
   let rec load () = 
     print_endline "Do you want to load a previous game? (Y/N)";
     let ans = read_line () in
-    if ans = "Y" then begin
+    if ans = "quit" then begin 
+      print_endline "Bye have a beautiful time";
+      exit 0; end
+    else if ans = "Y" then begin
       print_endline "Enter the file name for the board";
       let filename = read_line () in
-      try let board = load_game filename in 
+      try let board = Game.load_game filename in 
         print_endline "Enter the file name for the players";
         try let players = read_line () in
-          match load_players players with
+          match Game.load_players players with
           |(one, false, two, false, _, _) -> move board one two
           | (one, false, two, true, true, difficulty) -> 
             play_with_bot board one two one.is_turn true difficulty

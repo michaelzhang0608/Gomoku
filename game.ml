@@ -49,7 +49,7 @@ let make_move board x y player =
   let piece = player.color in
   let line = Array.get board (y - 1) in
   Array.set line (x - 1) piece;
-  Array.set board (y - 1) line;;
+  Array.set board (y - 1) line
 
 let update_score winner = 
   {winner with games_won = winner.games_won + 1}
@@ -65,7 +65,6 @@ let rec dfs board x y acc color dir=
   else if dir = "northeast" then dfs board (x - 1) (y + 1) (acc + 1) color dir
   else if dir = "southeast" then dfs board (x + 1) (y + 1) (acc + 1) color dir
   else dfs board (x + 1) (y - 1) (acc + 1) color dir
-
 
 let check_victor board x y = 
   let color = Array.get (Array.get board (x)) (y) in
@@ -117,9 +116,7 @@ let find_color color =
     | (k', v') :: tail -> if color = k' then v' else match_color color tail in
   match_color color color_map 
 
-let available_colors (color1 : string) 
-    (color_kwords : (string * ANSITerminal.style list) list) 
-    (acc : (string * ANSITerminal.style list) list) = 
+let available_colors color1 color_kwords acc = 
   let rec create_colors color color_lst acc = 
     match color_lst with
     | [] -> acc
@@ -133,6 +130,8 @@ let create_board dimension =
 let clear_board (board : 'a array array) = 
   create_board (Array.length board) 
 
+
+(* 
 let rec play_again board p1 p2 =  
   print_endline "Would you like to play again? (Y/N)";
   print_string [white] "> ";
@@ -151,9 +150,52 @@ let victory board p1 p2 winner=
   else 
     play_again (clear_board board) p1 p2
 
-
 let tie board p1 p2 = 
   print_color board;
   print_endline ("Tie! You are both too smart.");
-  play_again (clear_board board) p1 p2
+  play_again (clear_board board) p1 p2 *)
 
+let load_game name = 
+  let lst = Csv.load name in
+  let lst_to_board lst = 
+    Array.of_list (List.map Array.of_list lst) in
+  lst_to_board lst
+
+let save_game (board : string array array) = 
+  let fold_function acc lst = 
+    acc @ [(Array.to_list lst)] in
+  let lst = Array.fold_left fold_function [] board in
+  Csv.save "board.csv" lst
+
+let load_players name = 
+  let lst = Csv.load name in
+  let player1_data = List.nth lst 0 in
+  let player1 = {id = List.nth player1_data 0; 
+                 games_won = int_of_string (List.nth player1_data 1); 
+                 is_turn = bool_of_string(List.nth player1_data 2);
+                 color = List.nth player1_data 3; 
+                 last_move = [int_of_string(List.nth player1_data 4); 
+                              int_of_string(List.nth player1_data 5)]} in
+  let player2_data = List.nth lst 1 in
+  let player2 = {id = List.nth player2_data 0; 
+                 games_won = int_of_string (List.nth player2_data 1); 
+                 is_turn = bool_of_string (List.nth player2_data 2);
+                 color = List.nth player2_data 3; 
+                 last_move = [int_of_string(List.nth player2_data 4); 
+                              int_of_string(List.nth player2_data 5)]} in
+  (* if List.length player2_data = 7 then begin *)
+  if bool_of_string (List.nth player2_data 6) then 
+    (player1, false, player2, true, true, List.nth player2_data 7)
+  else (player1, false, player2, true, false, List.nth player2_data 7) 
+
+
+let save_human_players (player1: player) (player2 : player) = 
+  let lst1 = [player1.id;string_of_int(player1.games_won);
+              if player1.is_turn then "true" else "false";player1.color;
+              string_of_int (List.nth (player1.last_move) 0);
+              string_of_int (List.nth (player1.last_move )1)] in
+  let lst2 = [player2.id;string_of_int(player2.games_won);
+              if player2.is_turn then "true" else "false";player2.color;
+              string_of_int (List.nth (player2.last_move) 0);
+              string_of_int (List.nth (player2.last_move )1)] in
+  Csv.save "players.csv" ([lst1] @ [lst2])
