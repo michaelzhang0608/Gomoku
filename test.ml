@@ -1,5 +1,3 @@
-
-(* TODO: Create helper functions for testing *)
 open OUnit2
 open Game
 open Bot
@@ -225,7 +223,7 @@ let reset_board_test name b1 b2 expected_output =
   name >:: (fun  _-> 
       assert_equal expected_output (b1 = b2)) 
 
-let bbot0  = [|[|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+let bbot  = [|[|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
                  " - "; " - "; " - "|];
               [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; 
                 " - "; " - "; " - "|];
@@ -252,11 +250,65 @@ let bbot0  = [|[|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; 
               [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
                 " - "; " - "; " - "|]|]
 
+let bbot0  = [|[|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+                 " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; 
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " R "; " - "; " - "; " - "; " - "; 
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " Y "; " R "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " Y "; " - "; " Y "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|]|]
+
+let bbot1easy  = [|[|" R "; " R "; " R "; " R "; " R "; " - "; " - "; " - "; " - "; " - ";
+                 " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; 
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " M "; " - "; 
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " M "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" M "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " M "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " R "; " M "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " M "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|]|]
+
 let bbot1  = [|[|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
                  " - "; " - "; " - "|];
               [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
                 " - "; " - "; " - "|];
-              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " M "; " - ";
+              [|" - "; " - "; " R "; " - "; " - "; " - "; " - "; " - "; " M "; " - ";
                 " - "; " - "; " - "|];
               [|" - "; " - "; " - "; " R "; " M "; " - "; " - "; " - "; " - "; " - ";
                 " - "; " - "; " - "|];
@@ -266,11 +318,65 @@ let bbot1  = [|[|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; 
                 " - "; " - "; " - "|];
               [|" - "; " - "; " - "; " - "; " - "; " - "; " R "; " M "; " - "; " - ";
                 " - "; " - "; " - "|];
-              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " R "; " - "; " - ";
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
                 " - "; " - "; " - "|];
               [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
                 " - "; " - "; " - "|];
               [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|]|]
+
+let bbot1hard  = [|[|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+                 " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; 
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " M "; " - "; 
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " M "; " - "; " R "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" M "; " - "; " - "; " - "; " - "; " - "; " R "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " M "; " - "; " - "; " - "; " - "; " R "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " R "; " M "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " R "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|]|]
+
+let bbot2easy  = [|[|" R "; " R "; " R "; " R "; " R "; " - "; " - "; " - "; " Y "; " - ";
+                 " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; 
+                " - "; " - "; " - "|];
+              [|" - "; " Y "; " Y "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; 
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " Y "; " - "; " - "; " Y "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" Y "; " - "; " R "; " - "; " - "; " - "; " R "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " Y "; " - "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " Y "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " R "; " - "; " - "; " - "; " - ";
                 " - "; " - "; " - "|];
               [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
                 " - "; " - "; " - "|];
@@ -306,6 +412,60 @@ let bbot2  = [|[|" - "; " - "; " - "; " Y "; " - "; " - "; " - "; " - "; " Y "; 
               [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
                 " - "; " - "; " - "|]|]
 
+let bbot2hard  = [|[|" - "; " - "; " - "; " Y "; " - "; " - "; " - "; " - "; " Y "; " - ";
+                 " - "; " - "; " - "|];
+              [|" R "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; 
+                " - "; " - "; " - "|];
+              [|" R "; " Y "; " Y "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; 
+                " - "; " - "; " - "|];
+              [|" R "; " - "; " - "; " - "; " - "; " Y "; " - "; " - "; " Y "; " - ";
+                " - "; " - "; " - "|];
+              [|" R "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" R "; " R "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" Y "; " - "; " R "; " - "; " - "; " - "; " R "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " Y "; " - "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " Y "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " R "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|]|]
+
+let bbot3easy  = [|[|" B "; " R "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+                 " - "; " - "; " - "|];
+              [|" - "; " B "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; 
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " R "; " - "; " B "; " - "; " - "; " - "; " - "; " - "; 
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " B "; " - "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " B "; " - "; " B "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " R "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" B "; " - "; " - "; " - "; " - "; " - "; " R "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " R "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " R "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " R ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|];
+              [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
+                " - "; " - "; " - "|]|]
+
 let bbot3  = [|[|" B "; " - "; " R "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
                  " - "; " - "; " - "|];
               [|" R "; " B "; " R "; " - "; " - "; " R "; " - "; " - "; " - "; " - "; 
@@ -333,7 +493,21 @@ let bbot3  = [|[|" B "; " - "; " R "; " - "; " - "; " - "; " - "; " - "; " - "; 
               [|" - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - "; " - ";
                 " - "; " - "; " - "|]|]
 
-let rec step_with_bot name board player bot lst = 
+let test_bot_optimal_move name board pcolor plast blast level expected_output =
+  let player = {id="TESTER";games_won = 0;is_turn = true;color=pcolor; 
+                last_move = plast} in
+  let bot = {id="BOT";games_won = 0;is_turn =false;color=" R ";
+             last_move=blast} in
+  let p = Game.change_turn player in
+  let b = Game.change_turn bot in
+  let (y, x) = Bot.get_optimal_move board p b level in
+  (*
+  print_endline ("x=" ^ (string_of_int y) ^ " y=" ^ (string_of_int x));
+  *)
+  name >:: (fun  _-> 
+      assert_equal expected_output (x + 1, y + 1)) 
+
+let rec step_with_bot name board player bot level lst = 
   match lst with
   | [] -> (
     print_endline (name ^ " b1="); 
@@ -344,43 +518,43 @@ let rec step_with_bot name board player bot lst =
     if Array.get (Array.get board (y - 1)) (x - 1) <> " - " then (
       print_string [red] ("Bot took this spot already: (" ^ (string_of_int x) ^ ", " ^ (string_of_int y) ^ ")");
       print_endline "";
-      step_with_bot name board player bot tl
+      step_with_bot name board player bot level tl
     )
     else (
       Game.make_move board x y player;
       let p = {player with last_move = [x;y]} in 
-    if Game.check_victor board (y - 1) (x - 1) = true then (
-          print_string [cyan] "PLAYER WON !";
-          print_endline "";
-          print_endline (name ^ " b1="); 
-          print_color board;
-          (x, y)
-    )
-    else (
-      let p = Game.change_turn p in
-      let b = Game.change_turn bot in
-      match Bot.get_optimal_move board p b with
-      | (x', y') -> ( 
-        Game.make_move board (y' + 1) (x' + 1) bot;
-        let b' = {b with last_move = [x';y']} in
-        if Game.check_victor board x' y' = true then (
-          print_string [cyan] "BOT WON !";
-          print_endline "";
-          print_endline (name ^ " b1="); 
-          print_color board;
-          (x', y')
-        )
-        else (
-          let b' = Game.change_turn b' in
-          let p'= Game.change_turn p in
-          step_with_bot name board p' b' tl
+      if Game.check_victor board (y - 1) (x - 1) = true then (
+        print_string [cyan] "PLAYER WON !";
+        print_endline "";
+        print_endline (name ^ " b1="); 
+        print_color board;
+        (x, y)
+      )
+      else (
+        let p = Game.change_turn p in
+        let b = Game.change_turn bot in
+        match Bot.get_optimal_move board p b level with
+        | (x', y') -> ( 
+          Game.make_move board (y' + 1) (x' + 1) bot;
+          let b' = {b with last_move = [x';y']} in
+          if Game.check_victor board x' y' = true then (
+            print_string [cyan] "BOT WON !";
+            print_endline "";
+            print_endline (name ^ " b1="); 
+            print_color board;
+            (y' + 1, x' + 1)
+          )
+          else (
+            let b' = Game.change_turn b' in
+            let p'= Game.change_turn p in
+            step_with_bot name board p' b' level tl
+          )
         )
       )
     )
-    )
-   )
+  )
 
-let test_bot_game name steps b2 expected_output =
+let test_bot_game name steps b2 level expected_output =
   print_endline "======================================";
   let length = Array.length (Array.get b2 0) in 
   let board = Array.make_matrix length length " - " in
@@ -388,13 +562,13 @@ let test_bot_game name steps b2 expected_output =
                 last_move = [-1;-1]} in
   let bot = {id="BOT";games_won = 0;is_turn =false;color=" R ";
              last_move=[-1;-1]} in
-  ignore (step_with_bot name board player bot steps);
+  ignore (step_with_bot name board player bot level steps);
   print_endline (name ^ " b2=");
   print_color b2;
   name >:: (fun  _-> 
       assert_equal expected_output (board = b2)) 
 
-let test_bot_game1 name expected_output =
+let test_bot_game1 name b2 level expected_output =
   print_endline "======================================";
   let board = Array.make_matrix 13 13 " - " in
   let player = {id="P1";games_won = 0;is_turn = true;color=" M "; 
@@ -402,13 +576,13 @@ let test_bot_game1 name expected_output =
   let bot = {id="BOT1";games_won = 0;is_turn =false;color=" R ";
              last_move=[-1;-1]} in
   let steps = [(5, 4); (8, 7); (9, 3); (2, 6); (1, 5); (9, 9)] in
-  ignore(step_with_bot name board player bot steps);
+  ignore(step_with_bot name board player bot level steps);
   print_endline (name ^ " b2=");
-  print_color bbot1;
+  print_color b2;
   name >:: (fun  _-> 
-      assert_equal expected_output (board = bbot1)) 
+      assert_equal expected_output (board = b2)) 
 
-let test_bot_game2 name expected_output =
+let test_bot_game2 name b2 level expected_output =
   print_endline "======================================";
   let board = Array.make_matrix 13 13 " - " in
   let player = {id="P2";games_won = 0;is_turn = true;color=" Y "; 
@@ -416,21 +590,21 @@ let test_bot_game2 name expected_output =
   let bot = {id="BOT2";games_won = 0;is_turn =false;color=" R ";
              last_move=[-1;-1]} in
   let steps = [(5, 9); (4, 8); (1, 7); (6, 4); (2, 3); (9, 1); (3, 3); (4, 1); (9, 4); (11, 9)] in
-  ignore (step_with_bot name board player bot steps);
+  ignore (step_with_bot name board player bot level steps);
   print_endline (name ^ " b2=");
-  print_color bbot2;
+  print_color b2;
   name >:: (fun  _-> 
-      assert_equal expected_output (board = bbot2)) 
+      assert_equal expected_output (board = b2)) 
 
-let test_bot_winner name steps expected_output =
+let test_bot_winner name steps level expected_output =
   print_endline "======================================";
   let board = Array.make_matrix 13 13 " - " in
   let player = {id="TESTER";games_won = 0;is_turn = true;color=" G "; 
                 last_move = [-1;-1]} in
   let bot = {id="BOT";games_won = 0;is_turn =false;color=" R ";
              last_move=[-1;-1]} in
-  let (x, y) = step_with_bot name board player bot steps in
-  name >:: (fun  _-> assert_equal expected_output (check_victor board x y))
+  let (x, y) = step_with_bot name board player bot level steps in
+  name >:: (fun  _-> assert_equal expected_output (check_victor board (y - 1) (x - 1)))
 
 
 let board_tests = [
@@ -468,23 +642,65 @@ let board_tests = [
     test_player test_player_won_game;
   update_score_test "update score for player with no wins" 
     test_player2 test_player2_won_game;
-  test_bot_game1 "bot game 1 - comparing boards" true;
-  test_bot_game2 "bot game 2 - comparing boards" true;
-  test_bot_game "bot game 3 - comparing boards" 
+  test_bot_optimal_move "bot(easy) optimal move (6, 2)" bbot0 " Y " [6;5] [6;3] "easy" (6, 2);
+  test_bot_optimal_move "bot(medium) optimal move (6, 2)" bbot0 " Y " [6;5] [6;3] "medium" (6, 2);
+  test_bot_optimal_move "bot(hard) optimal move (6, 2)" bbot0 " Y " [6;5] [6;3] "hard" (6, 2);
+  test_bot_optimal_move "bot(easy) optimal move (2, 2)" bbot1 " M " [9;3] [5;5] "easy" (2, 2);
+  test_bot_optimal_move "bot(medium) optimal move (2, 2)" bbot1 " M " [9;3] [5;5] "medium" (2, 2);
+  test_bot_optimal_move "bot(hard) optimal move (8, 8)" bbot1 " M " [9;3] [5;5] "hard" (8, 8);
+  test_bot_optimal_move "bot(easy) optimal move (2, 9)" bbot2 " Y " [11;9] [8;2] "easy" (2, 9);
+  test_bot_optimal_move "bot(medium) optimal move (2, 9)" bbot2 " Y " [11;9] [8;2] "medium" (2, 9);
+  test_bot_optimal_move "bot(hard) optimal move (2, 9)" bbot2 " Y " [11;9] [8;2] "hard" (2, 9);
+  test_bot_optimal_move "bot(easy) optimal move (4, 3)" bbot3 " B " [13;13] [1;3] "easy" (4, 3);
+  test_bot_optimal_move "bot(medium) optimal move (4, 7)" bbot3 " B " [13;13] [1;3] "medium" (4, 7);
+  test_bot_optimal_move "bot(hard) optimal move (4, 7)" bbot3 " B " [13;13] [1;3] "hard" (4, 7);
+  test_bot_game1 "bot(easy) game 1 - comparing boards" bbot1easy "easy" true;
+  test_bot_game1 "bot(medium) game 1 - comparing boards" bbot1 "medium" true;
+  test_bot_game1 "bot(hard) game 1 - comparing boards" bbot1hard "hard" true;
+  test_bot_game2 "bot(easy) game 2 - comparing boards" bbot2easy "easy" true;
+  test_bot_game2 "bot(medium) game 2 - comparing boards" bbot2 "medium" true;
+  test_bot_game2 "bot(hard) game 2 - comparing boards" bbot2hard "hard" true;
+  test_bot_game "bot(easy) game 3 - comparing boards" 
     [(1, 1); (2, 2); (3, 3); (4, 4); (5, 5); 
      (6, 6); (3, 5); (5, 3); (1, 7); (5, 7);
      (3, 7); (6, 7); (8, 8); (9, 9); (10, 10);
-     (11, 11); (12, 12); (13, 13)] bbot3 true;
-  test_bot_winner "bot game 4 - bot won" 
+     (11, 11); (12, 12); (13, 13)] bbot3easy "easy" true;
+  test_bot_game "bot(medium) game 3 - comparing boards" 
+    [(1, 1); (2, 2); (3, 3); (4, 4); (5, 5); 
+     (6, 6); (3, 5); (5, 3); (1, 7); (5, 7);
+     (3, 7); (6, 7); (8, 8); (9, 9); (10, 10);
+     (11, 11); (12, 12); (13, 13)] bbot3 "medium" true;
+  test_bot_game "bot(hard) game 3 - comparing boards" 
+    [(1, 1); (2, 2); (3, 3); (4, 4); (5, 5); 
+     (6, 6); (3, 5); (5, 3); (1, 7); (5, 7);
+     (3, 7); (6, 7); (8, 8); (9, 9); (10, 10);
+     (11, 11); (12, 12); (13, 13)] bbot3 "hard" true;
+  test_bot_winner "bot(easy) game 4 - bot won" 
     [(1, 3); (2, 9); (5, 3); (10, 11); (9, 5); 
-     (10, 6); (7, 1)] true; 
-  test_bot_winner "bot game 5 - player won" 
+     (10, 6); (7, 1)] "easy" true; 
+  test_bot_winner "bot(medium) game 4 - bot won" 
+    [(1, 3); (2, 9); (5, 3); (10, 11); (9, 5); 
+     (10, 6); (7, 1)] "medium" true; 
+  test_bot_winner "bot(hard) game 4 - bot won" 
+    [(1, 3); (2, 9); (5, 3); (10, 11); (9, 5); 
+     (10, 6); (7, 1)] "hard" true; 
+  test_bot_winner "bot(easy) game 5 - player won" 
+    [(1, 1); (2, 2); (3, 2); (4, 4); (5, 5); 
+     (4, 6); (1, 5); (5, 3); (2, 7); (7, 2);
+     (3, 7); (9, 5); (9, 6); (6, 5); (9, 7);
+     (5, 6); (6, 7); (5, 7); (4, 7)] "easy" true;
+  test_bot_winner "bot(medium) game 5 - player won" 
     [(1, 1); (2, 2); (3, 2); (4, 4); (5, 5); 
      (4, 6); (1, 5); (5, 3); (2, 7); (7, 2);
      (3, 7); (9, 5); (9, 6); (6, 5); (9, 7);
      (7, 5); (9, 8); (7, 3); (8, 4); (4, 1);
      (2, 6); (7, 6); (6, 6); (2, 5); (5, 6); 
-     (6, 7); (5, 7); (9, 3)] true;
+     (6, 7); (5, 7); (9, 3)] "medium" true;
+  test_bot_winner "bot(hard) game 5 - player failed to win" 
+    [(1, 1); (2, 2); (3, 2); (4, 4); (5, 5); 
+     (4, 6); (1, 5); (5, 3); (2, 7); (7, 2);
+     (5, 6); (3, 7); (1, 9); (1, 7); (6, 4);
+     (5, 9); (8, 6); (7, 6)] "hard" false;
 ]
 
 let suite = 
