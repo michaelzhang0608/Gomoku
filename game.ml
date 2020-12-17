@@ -18,7 +18,6 @@ type player = {
 }
 
 
-
 type game = {
   id: int;
   game_board: board;

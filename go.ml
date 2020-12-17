@@ -64,7 +64,8 @@ let rec dfs board x y enemy=
 (* score points *)
 let rec dfs2  board x y player = 
   if Array.get (Array.get board (x)) (y) <> " + " then begin
-    if Array.get (Array.get board (x)) (y) = player.color then true else false end
+    if Array.get (Array.get board (x)) (y) = player.color then true 
+    else false end
   else if x < 0 || x > 18 || y < 0 || y > 18 then true
   else dfs2 board (x + 1) y player && dfs2 board x (y+1) player &&
        dfs2 board (x-1) y player && dfs2 board x (y-1) player
