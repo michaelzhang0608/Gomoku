@@ -161,35 +161,34 @@ let load_game name =
     Array.of_list (List.map Array.of_list lst) in
   lst_to_board lst
 
-let save_game (board : string array array) = 
-  let fold_function acc lst = 
-    acc @ [(Array.to_list lst)] in
-  let lst = Array.fold_left fold_function [] board in
-  Csv.save "board.csv" lst
-
-let load_players name = 
-  let lst = Csv.load name in
-  let player1_data = List.nth lst 0 in
+let load_human_players lst = 
+  let player1_data = List.nth lst 1 in
   let player1 = {id = List.nth player1_data 0; 
                  games_won = int_of_string (List.nth player1_data 1); 
                  is_turn = bool_of_string(List.nth player1_data 2);
                  color = List.nth player1_data 3; 
                  last_move = [int_of_string(List.nth player1_data 4); 
                               int_of_string(List.nth player1_data 5)]} in
-  let player2_data = List.nth lst 1 in
+  let player2_data = List.nth lst 2 in
   let player2 = {id = List.nth player2_data 0; 
                  games_won = int_of_string (List.nth player2_data 1); 
                  is_turn = bool_of_string (List.nth player2_data 2);
                  color = List.nth player2_data 3; 
                  last_move = [int_of_string(List.nth player2_data 4); 
                               int_of_string(List.nth player2_data 5)]} in
-  (* if List.length player2_data = 7 then begin *)
-  if bool_of_string (List.nth player2_data 6) then 
-    (player1, false, player2, true, true, List.nth player2_data 7)
-  else (player1, false, player2, true, false, List.nth player2_data 7) 
+  if bool_of_string (List.hd (List.nth lst 3)) then 
+    (player1, false, player2, false, true, "")
+  else (player1, false, player2, false, false, "")
 
 
-let save_human_players (player1: player) (player2 : player) = 
+let save_board (board : string array array) name = 
+  let fold_function acc lst = 
+    acc @ [(Array.to_list lst)] in
+  let lst = Array.fold_left fold_function [] board in
+  Csv.save name lst
+
+let save_human_players (player1: player) (player2 : player) name 
+    first= 
   let lst1 = [player1.id;string_of_int(player1.games_won);
               if player1.is_turn then "true" else "false";player1.color;
               string_of_int (List.nth (player1.last_move) 0);
@@ -198,4 +197,30 @@ let save_human_players (player1: player) (player2 : player) =
               if player2.is_turn then "true" else "false";player2.color;
               string_of_int (List.nth (player2.last_move) 0);
               string_of_int (List.nth (player2.last_move )1)] in
-  Csv.save "players.csv" ([lst1] @ [lst2])
+  Csv.save name ([["humans"];lst1;lst2;
+                  [if first = player1 then "true" else "false"]])
+
+let load_bot_players lst = 
+  let player1_data = List.nth lst 1 in
+  let player1 = {id = List.nth player1_data 0; 
+                 games_won = int_of_string (List.nth player1_data 1); 
+                 is_turn = bool_of_string(List.nth player1_data 2);
+                 color = List.nth player1_data 3; 
+                 last_move = [int_of_string(List.nth player1_data 4); 
+                              int_of_string(List.nth player1_data 5)]} in
+  let bot_data = List.nth lst 2 in
+  let bot = {id = List.nth bot_data 0; 
+             games_won = int_of_string (List.nth bot_data 1); 
+             is_turn = bool_of_string (List.nth bot_data 2);
+             color = List.nth bot_data 3; 
+             last_move = [int_of_string(List.nth bot_data 4); 
+                          int_of_string(List.nth bot_data 5)]} in
+  if bool_of_string (List.nth bot_data 6) then 
+    (player1, false, bot, true, true, List.nth bot_data 7)
+  else (player1, false, bot, true, false, List.nth bot_data 7)
+
+
+let load_players name = 
+  let lst = Csv.load name in
+  if List.hd (List.nth lst 0) = "bots" then load_bot_players lst
+  else load_human_players lst

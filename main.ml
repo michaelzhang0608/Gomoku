@@ -172,15 +172,123 @@ let get_name () =
   if human = "quit" then exit 0;
   human
 
-let rec move (board : string array array) (p1: Game.player) (p2:Game.player) = 
+
+let save_game board p1 p2 first=
+  print_endline "Enter file name for the board";
+  let board_name = read_line () in
+  print_endline "Enter file name for the players";
+  let players_name = read_line () in
+  save_human_players p1 p2 players_name first;
+  save_board board board_name;
+  print_endline "Bye";
+  exit 0
+
+let get_recommended_move board bot player = 
+  match Bot.get_optimal_move board bot player "hard" with
+  | (x,y) -> print_endline ("Recommended move: " ^ string_of_int (y + 1) ^
+                            ", " ^ string_of_int (x + 1))
+
+
+let rec play_with_bot board player bot bool who_goes_first difficulty= 
+  let () = if difficulty = "easy" && bool 
+    then get_recommended_move board bot player in 
+  if bool then begin
+    Game.print_color board;
+    let x = get_x_coordinate (Array.length board) in
+    if x = -1 then begin
+      print_endline "Enter file name for the board";
+      let board_name = read_line () in
+      print_endline "Enter file name for the players";
+      let players_name = read_line () in
+      Bot.save_bot_players player bot players_name who_goes_first difficulty;
+      Game.save_board board board_name;
+      print_endline "Bye";
+      exit 0; end
+    else 
+      let y = get_y_coordinate (Array.length board) in
+      if Array.get (Array.get board (y - 1)) (x - 1) <> " - " then  begin
+        print_string [red] "Invalid move";
+        print_endline "";
+        play_with_bot board player bot bool who_goes_first difficulty end
+      else 
+        Game.make_move board x y player;
+      let new_player = {player with last_move = [x;y]} in 
+      if Game.check_tie board then begin
+        if tie board new_player bot then 
+          play_with_bot (clear_board board) new_player bot bool who_goes_first
+            difficulty
+        else print_endline "Bye have a beautiful time"; exit 0; end
+      else if Game.check_victor board (y - 1) (x - 1)= true then begin
+        if victory board new_player bot new_player then 
+          let new_player = Game.update_games_won new_player in 
+          play_with_bot (clear_board board) 
+            new_player bot who_goes_first who_goes_first difficulty;
+        else print_endline "Bye have a beautiful time"; exit 0; end 
+      else 
+        let new_player = Game.change_turn new_player in
+        let bot = Game.change_turn bot in
+        play_with_bot board new_player bot new_player.is_turn who_goes_first 
+          difficulty end
+  else begin
+    match Bot.get_optimal_move board player bot difficulty with
+    | (x,y) -> 
+      let new_bot = {bot with last_move = [x;y]} in
+      Game.make_move board (y + 1) (x + 1) bot;
+      if Game.check_tie board then begin
+        if tie board player new_bot then
+          play_with_bot (clear_board board) player new_bot bool who_goes_first 
+            difficulty
+        else print_endline "Bye have a beautiful time"; exit 0; end
+      else 
+      if Game.check_victor board x y = true then begin
+        if victory board new_bot player new_bot then
+          let new_bot = Game.update_games_won new_bot in
+          let new_bot = {new_bot with last_move = [-1;-1]} in
+          play_with_bot (clear_board board ) player new_bot 
+            who_goes_first who_goes_first difficulty;
+        else print_endline "Bye have a beautiful time"; exit 0;  end
+      else  
+        let new_bot = Game.change_turn new_bot in
+        let player= Game.change_turn player in
+        play_with_bot board player new_bot player.is_turn who_goes_first 
+          difficulty end
+
+let rec move board p1 p2 first second = 
   Game.print_color board;
   let x = get_x_coordinate (Array.length board) in
-  if x = -1 then begin
+  if x = -1 then save_game board p1 p2 first
+  else let y = get_y_coordinate (Array.length board) in 
+    if Array.get (Array.get board (y - 1)) (x - 1) <> " - " then begin
+      print_string [red] "Invalid move /n";
+      move board p1 p2 first second end
+    else Game.make_move board x y p1;
+    let p1 = {p1 with last_move = [x;y]} in
+    if Game.check_tie board then begin
+      match tie board p1 p2 with 
+      | true -> move (Game.clear_board board) 
+                  first second first second 
+      | false ->  print_endline "Bye have a beautiful time"; exit 0; end
+    else if Game.check_victor board (y - 1) (x - 1) = true then begin
+      match victory board p1 p2 p1 with 
+      | true ->  
+        if p1 = first then move board (Game.update_games_won p1) 
+            p2 (Game.update_games_won p1) p2
+        else move board (Game.update_games_won p1) p2 p2
+            (Game.update_games_won p1)
+      | false -> print_endline "Bye have a beautiful time"; exit 0 end
+    else 
+      let new_p1 = Game.change_turn p1 in 
+      let new_p2 = Game.change_turn p2 in
+      move board new_p2 new_p1 first second
+(* let rec move (board : string array array) (p1: Game.player) (p2:Game.player) = 
+   Game.print_color board;
+   let x = get_x_coordinate (Array.length board) in
+   if x = -1 then begin
     print_endline "Bye";
     Game.save_human_players p1 p2;
     Game.save_game board;
     exit 0; end
-  else let y = get_y_coordinate (Array.length board) in
+   else let y = get_y_coordinate (Array.length board) in
     if Game.get_turn p1 then begin
       if Array.get (Array.get board (y - 1)) (x - 1) <> " - " then  begin
         print_string [red] "Invalid move";
@@ -225,8 +333,8 @@ let rec move (board : string array array) (p1: Game.player) (p2:Game.player) =
         let new_p2 = Game.change_turn p2 in
         move board new_p1 new_p2 
 
-let rec play_with_bot board player bot bool who_goes_first difficulty= 
-  if bool then begin
+   let rec play_with_bot board player bot bool who_goes_first difficulty= 
+   if bool then begin
     Game.print_color board;
     let x = get_x_coordinate (Array.length board) in
     if x = -1 then begin
@@ -259,7 +367,7 @@ let rec play_with_bot board player bot bool who_goes_first difficulty=
         let bot = Game.change_turn bot in
         play_with_bot board new_player bot new_player.is_turn who_goes_first 
           difficulty end
-  else begin
+   else begin
     match Bot.get_optimal_move board player bot difficulty with
     | (x,y) -> 
       let new_bot = {bot with last_move = [x;y]} in
@@ -281,7 +389,7 @@ let rec play_with_bot board player bot bool who_goes_first difficulty=
         let new_bot = Game.change_turn new_bot in
         let player= Game.change_turn player in
         play_with_bot board player new_bot player.is_turn who_goes_first 
-          difficulty end
+          difficulty end *)
 
 let rec difficulty_level () = 
   print_endline "Enter the bot difficulty: easy, medium, or hard ";
@@ -333,10 +441,7 @@ let play_game length =
      last_move = [-1; -1]} in
   print_endline "These are how the coordinates work: ";
   print_coordinates length;
-  move board player1 player2
-
-
-
+  move board player1 player2 player1 player2
 
 
 let rec get_length () = 
@@ -348,7 +453,7 @@ let rec get_length () =
     else begin
       let rec choice () = 
         print_endline "Will you be playing against our bot? (Y/N) ";
-        let ans  = read_line () in
+        let ans = read_line () in
         if ans = "Y" then bot_game length
         else if ans = "N" then play_game length
         else if ans = "quit" then exit 0
@@ -356,26 +461,28 @@ let rec get_length () =
       choice () end
   with Failure _ -> 
     print_endline "Bye have a beautiful time";
-    exit 0 
+    exit 0
 
 (** [main ()] prompts for the game to play, then starts it. *)
 let main () =
   ANSITerminal.(print_string [red] "\n\nWelcome. Type quit to exit the game 
-  anytime, type save to save the current game.\n");
+ anytime, type save to save the current game.\n");
   let rec load () = 
     print_endline "Do you want to load a previous game? (Y/N)";
     let ans = read_line () in
-    if ans = "quit" then begin 
-      print_endline "Bye have a beautiful time";
-      exit 0; end
-    else if ans = "Y" then begin
+    if ans = "Y" then begin
       print_endline "Enter the file name for the board";
       let filename = read_line () in
-      try let board = Game.load_game filename in 
+      try let board = load_game filename in 
         print_endline "Enter the file name for the players";
         try let players = read_line () in
-          match Game.load_players players with
-          |(one, false, two, false, _, _) -> move board one two
+          match load_players players with
+          |(one, false, two, false, true, _) -> 
+            if one.is_turn then move board one two one two 
+            else move board two one one two
+          | (one, false, two, false, false, _) -> 
+            if one.is_turn then move board one two two one
+            else move board two one two one
           | (one, false, two, true, true, difficulty) -> 
             play_with_bot board one two one.is_turn true difficulty
           | (one, false, two, true, false, difficulty) -> 
@@ -384,6 +491,7 @@ let main () =
       with Sys_error _ -> load ()
     end
     else if ans = "N" then get_length () 
+    else if ans = "quit" then let () = print_endline "Bye" in exit 0
     else load () in load ()
 
 let print_board board = 

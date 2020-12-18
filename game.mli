@@ -102,11 +102,13 @@ val available_colors: 'a -> ('a * 'b) list -> 'c -> ('a * 'b) list
     represents the CSV file name. *)
 val load_game: string -> string array array
 
-(** [save_name board] updates the CSV file "board.csv" with the specified game
-    board. The string array array [board] represents the board that is to be
-    saved ont the CSV file. The dimensions of [board] must be 13 or 15,
-    comprised of empty spots or player moves. *)
-val save_game: string array array -> unit
+(** [save_name board player1 player2 first] updates the CSV file "board.csv" 
+    with the specified game board. The string array array [board] represents
+     the board that is to be saved ont the CSV file. The player [player1] and
+     player [player2] represent the first and second players in the game,
+     respectively. The player [first] represents the player whose turn is first.
+     The dimensions of [board] must be 13 or 15, comprised of empty spots or 
+     player moves. *)
 
 (** [load_players name] are the players saved on the CSV file. The string [name] 
     represents the CSV file name. *)
@@ -115,4 +117,10 @@ val load_players: string -> player * bool * player * bool * bool * string
 (** [save_human_players player1 player2] updates the CSV file "players.csv" with 
     the two specified players. The player [player1] represents first player and
     the player [player2] represents the second player in the game. *)
-val save_human_players: player -> player -> unit
+val save_human_players: player -> player -> string -> player -> unit
+
+
+val save_board: string array array -> string -> unit
+
+val load_bot_players: string list list -> player * bool * 
+                                          player * bool * bool * string

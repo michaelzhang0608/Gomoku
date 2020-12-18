@@ -32,15 +32,17 @@ val check_edge_cases: board -> int -> int -> Game.player -> int
 
 
 val get_optimal_move: string array array -> player -> player -> string ->
-
   (int * int)
 
 (** [save_bot_players player bot bool difficulty] updates the CSV file 
     "players.csv" with the specified player and bot. The player [player] 
     represents the human player. The bot [bot] represents the bot player
-    The bool [bool] represents ________________. The string [difficulty]
+    The bool [bool] represents which players goes first. True means the human
+    player goes first and false means the bot goes first. The string [difficulty]
     represents the level of difficulty for the bot. *)
-val save_bot_players: Game.player -> Game.player -> bool -> string -> unit
+val save_bot_players: Game.player -> Game.player -> string -> bool -> 
+  string -> unit
+
 
 (* 
 

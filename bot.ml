@@ -233,7 +233,8 @@ let get_optimal_move board player bot difficulty=
       (x,y)
 
 
-let save_bot_players (player: Game.player) (bot: Game.player) bool difficulty = 
+let save_bot_players (player: Game.player) (bot: Game.player) name 
+    bool difficulty = 
   let lst1 = [player.id;string_of_int(player.games_won);
               if player.is_turn then "true" else "false";player.color;
               string_of_int (List.nth (player.last_move) 0);
@@ -246,12 +247,7 @@ let save_bot_players (player: Game.player) (bot: Game.player) bool difficulty =
               string_of_int (List.nth (bot.last_move )1); 
               if bool then "true" else "false";
               difficulty] in
-  Csv.save "players.csv" ([lst1] @ [lst2])
-
-
-
-
-
+  Csv.save name ([["bot"];lst1;lst2])
 
 
 
