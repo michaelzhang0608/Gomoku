@@ -21,14 +21,14 @@ ocamlfind ocamldep -package csv -package unix -package ounit2 -package qcheck -p
 ocamlfind ocamlc -c -package csv -package unix -package ounit2 -package qcheck -package str -package bisect_ppx -package ANSITerminal -o main.cmi main.mli # cached
 # Target: main.ml.depends, tags: { package(ANSITerminal), package(bisect_ppx), package(csv), package(ounit2), package(qcheck), package(str), package(unix), coverage, extension:ml, file:main.ml, ocaml, ocamldep, quiet, traverse }
 ocamlfind ocamldep -package csv -package unix -package ounit2 -package qcheck -package str -package bisect_ppx -package ANSITerminal -modules main.ml > main.ml.depends # cached
-# Target: go.mli.depends, tags: { package(ANSITerminal), package(bisect_ppx), package(csv), package(ounit2), package(qcheck), package(str), package(unix), extension:mli, file:go.mli, ocaml, ocamldep, quiet, traverse }
-ocamlfind ocamldep -package csv -package unix -package ounit2 -package qcheck -package str -package bisect_ppx -package ANSITerminal -modules go.mli > go.mli.depends # cached
-# Target: go.cmi, tags: { package(ANSITerminal), package(bisect_ppx), package(csv), package(ounit2), package(qcheck), package(str), package(unix), byte, compile, extension:mli, file:go.mli, interf, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -package csv -package unix -package ounit2 -package qcheck -package str -package bisect_ppx -package ANSITerminal -o go.cmi go.mli # cached
 # Target: main.cmo, tags: { package(ANSITerminal), package(bisect_ppx), package(csv), package(ounit2), package(qcheck), package(str), package(unix), byte, compile, coverage, extension:cmo, extension:ml, file:main.cmo, file:main.ml, implem, ocaml, quiet, traverse }
 ocamlfind ocamlc -c -package csv -package unix -package ounit2 -package qcheck -package str -package bisect_ppx -package ANSITerminal -o main.cmo main.ml # cached
-# Target: go.ml.depends, tags: { package(ANSITerminal), package(bisect_ppx), package(csv), package(ounit2), package(qcheck), package(str), package(unix), extension:ml, file:go.ml, ocaml, ocamldep, quiet, traverse }
-ocamlfind ocamldep -package csv -package unix -package ounit2 -package qcheck -package str -package bisect_ppx -package ANSITerminal -modules go.ml > go.ml.depends # cached
-# Target: go.cmo, tags: { package(ANSITerminal), package(bisect_ppx), package(csv), package(ounit2), package(qcheck), package(str), package(unix), byte, compile, extension:cmo, extension:ml, file:go.cmo, file:go.ml, implem, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -package csv -package unix -package ounit2 -package qcheck -package str -package bisect_ppx -package ANSITerminal -o go.cmo go.ml # cached
+# Target: authors.mli.depends, tags: { package(ANSITerminal), package(bisect_ppx), package(csv), package(ounit2), package(qcheck), package(str), package(unix), extension:mli, file:authors.mli, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package csv -package unix -package ounit2 -package qcheck -package str -package bisect_ppx -package ANSITerminal -modules authors.mli > authors.mli.depends # cached
+# Target: authors.cmi, tags: { package(ANSITerminal), package(bisect_ppx), package(csv), package(ounit2), package(qcheck), package(str), package(unix), byte, compile, extension:mli, file:authors.mli, interf, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package csv -package unix -package ounit2 -package qcheck -package str -package bisect_ppx -package ANSITerminal -o authors.cmi authors.mli # cached
+# Target: authors.ml.depends, tags: { package(ANSITerminal), package(bisect_ppx), package(csv), package(ounit2), package(qcheck), package(str), package(unix), extension:ml, file:authors.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package csv -package unix -package ounit2 -package qcheck -package str -package bisect_ppx -package ANSITerminal -modules authors.ml > authors.ml.depends # cached
+# Target: authors.cmo, tags: { package(ANSITerminal), package(bisect_ppx), package(csv), package(ounit2), package(qcheck), package(str), package(unix), byte, compile, extension:cmo, extension:ml, file:authors.cmo, file:authors.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package csv -package unix -package ounit2 -package qcheck -package str -package bisect_ppx -package ANSITerminal -o authors.cmo authors.ml # cached
 # Compilation successful.
