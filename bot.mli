@@ -1,33 +1,47 @@
+(** 
+   Representation of the bot player for Gomoku.
+
+   This module represents the bot and functions that result in bot moves of
+   varying difficulty.
+*)
 
 open Game
 
-(* [check_length] uses tail-recursion to check the length of a 
-   group of stones in the direction of [direction] *)
+(** [check_length] uses tail-recursion to check the length of a 
+    group of stones in the direction of [direction] *)
 val check_length: board -> int -> int -> string -> string -> int -> int
 
 
-(* [make_temporary_move] makes a potential move for the bot *)
+(** [make_temporary_move] makes a potential move for the bot *)
 val make_temporary_move: board -> int -> int -> Game.player -> unit
 
-(* [clear_piece] undos the temporary move made in [make_temporary_move] *)
+(** [clear_piece] undos the temporary move made in [make_temporary_move] *)
 val clear_piece: board -> int -> int -> unit
 
-(* [find_heuristic board x y] returns a list of two elements [el1, el2] such 
-   that el1 is the maximum number of pieces in a row that the piece at coordinates
-   x and y belongs to, and el2 is the total number of pieces that are either 
-   next to the piece at coordinates x y or are connected to it *)
+(** [find_heuristic board x y] returns a list of two elements [el1, el2] such 
+    that el1 is the maximum number of pieces in a row that the piece at 
+    coordinates x and y belongs to, and el2 is the total number of pieces that 
+    are either next to the piece at coordinates x y or are connected to it *)
 val find_heuristic: board -> int -> int -> Game.player -> int list
 
-(* [check_edge_cases board x y player] returns the number of pieces in a row 
-   that would be the player's color if a piece of the player's color 
-   was placed at coordinates x and y. *)
+(** [check_edge_cases board x y player] returns the number of pieces in a row 
+    that would be the player's color if a piece of the player's color 
+    was placed at coordinates x and y. *)
 val check_edge_cases: board -> int -> int -> Game.player -> int
 
 
 
 val get_optimal_move: string array array -> player -> player -> string ->
-
   (int * int)
+
+(** [save_bot_players player bot bool difficulty] updates the CSV file 
+    "players.csv" with the specified player and bot. The player [player] 
+    represents the human player. The bot [bot] represents the bot player
+    The bool [bool] represents which players goes first. True means the human
+    player goes first and false means the bot goes first. The string [difficulty]
+    represents the level of difficulty for the bot. *)
+val save_bot_players: Game.player -> Game.player -> string -> bool -> 
+  string -> unit
 
 
 (* 
