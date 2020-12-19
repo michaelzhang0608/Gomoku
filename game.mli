@@ -17,8 +17,6 @@ type player = {
   last_move: int list;
 }
 
-type player_id
-
 type game
 
 (** [print_board board] is the visual representation of the Gomoku board, using
@@ -99,7 +97,8 @@ val clear_board: 'a array array -> string array array
 val available_colors: 'a -> ('a * 'b) list -> 'c -> ('a * 'b) list
 
 (** [load_game name] is the board saved on the CSV file. The string [name] 
-    represents the CSV file name. *)
+    represents the CSV file name. The string [name] must be a valid CSV file
+    name that ends in ".csv".*)
 val load_game: string -> string array array
 
 (** [save_name board player1 player2 first] updates the CSV file "board.csv" 
@@ -110,17 +109,43 @@ val load_game: string -> string array array
      The dimensions of [board] must be 13 or 15, comprised of empty spots or 
      player moves. *)
 
-(** [load_players name] are the players saved on the CSV file. The string [name] 
-    represents the CSV file name. *)
+(** [load_players lst] represents players in a specific format. The string list
+    [lst] represents the data collected from a CSV file about the players.
+    The format contains a player representing the first player loaded, a bool
+    representing if that player is a bot, a player representing the second
+    player loaded, a bool representing if that player is a bot, a bool 
+    representing if there is a bot in this game, and a string representing any 
+    bot players. *)
 val load_players: string -> player * bool * player * bool * bool * string
 
-(** [save_human_players player1 player2] updates the CSV file "players.csv" with 
-    the two specified players. The player [player1] represents first player and
-    the player [player2] represents the second player in the game. *)
-val save_human_players: player -> player -> string -> player -> unit
-
-
-val save_board: string array array -> string -> unit
-
+(** [load_bot_players lst] represents players in a specific format. The string 
+    list [lst] represents the data collected from a CSV file about the players.
+    The format contains a player representing the first player loaded, a bool
+    representing if that player is a bot, a player representing the second
+    player loaded, a bool representing if that player is a bot, a bool 
+    representing if there is a bot in this game, and a string representing any 
+    bot players. *)
 val load_bot_players: string list list -> player * bool * 
                                           player * bool * bool * string
+
+(** [save_human_players player1 player2 name first] updates a CSV file with 
+    the two specified players. The player [player1] represents first player and
+    the player [player2] represents the second player in the game. 
+    The string [name] represents the name of the CSV file to save the 
+    human player information to. If the file name exists, the file is update, 
+    otherwise a new file of that name is created. The player [first] represents
+    which player has their turn first. 
+
+    The string [name] must end with ".csv" in order to create a valid file.*)
+val save_human_players: player -> player -> string -> player -> unit
+
+(** [save_board board name] updates a CSV file with the specified board. 
+    The board [board] represents the current game board with the players' moves.
+    The string [name] represents the name of the CSV file to save the 
+    board information to. If the file name exists, the file is update, 
+    otherwise a new file of that name is created. 
+
+    The string [name] must end with ".csv" in order to create a valid file.*)
+val save_board: string array array -> string -> unit
+
+

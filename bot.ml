@@ -38,6 +38,7 @@ let clear_piece board x y =
 
 let find_max = function
   | x::xs -> List.fold_left max x xs
+  | _ -> failwith "Not valid"
 
 (* returns number in a a row if player's piece was placed at x y *)
 let find_heuristic board x y (player: Game.player) = 
@@ -109,9 +110,6 @@ let human_1 board x y bot human difficulty=
   if difficulty = "hard" then 50 + List.nth (find_heuristic board x y human) 1 + 
                               List.nth (find_heuristic board x y bot) 1
   else 50 + List.nth (find_heuristic board x y human) 1
-
-
-
 
 let hard_evaluation board (bot:Game.player) human difficulty = 
   let x = List.nth bot.last_move 0 in
