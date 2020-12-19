@@ -192,25 +192,30 @@ let rec get_empty_spots board acc x y =
 
 
 let rec get_move lst max board (player: Game.player) bot difficulty= 
-  match lst with
+  match lst with 
   | [] -> max
   | hd :: tl -> 
-    match hd with
-    | (x, y) -> 
-      make_temporary_move board x y bot;
-      let potential_bot : Game.player = {bot with last_move = [x;y]} in
-      match max with
-      | (_, num) -> 
-        let new_max = if difficulty = "hard" then 
-            hard_evaluation board potential_bot player difficulty
-          else if difficulty = "medium" then 
-            medium_evaluation board potential_bot player  difficulty
-          else easy_evaluation board potential_bot player difficulty in
-        clear_piece board x y;
-        if new_max > num then 
-          get_move tl ((x,y), new_max) board player potential_bot difficulty
-        else 
-          get_move tl max board player bot difficulty
+    match hd with 
+    | (x, y) -> begin 
+        make_temporary_move board x y bot;
+        let potential_bot : Game.player = {bot with last_move = [x;y]} in 
+        evaluate_move max board player bot potential_bot difficulty x y tl end
+
+and evaluate_move max board player bot potential_bot difficulty x y tl = 
+  match max with 
+  | (_, num) -> 
+    let new_max = 
+      if difficulty = "hard" then 
+        hard_evaluation board potential_bot player difficulty
+      else if difficulty = "medium" then 
+        medium_evaluation board potential_bot player  difficulty
+      else easy_evaluation board potential_bot player difficulty in
+    clear_piece board x y;
+    if new_max > num then 
+      get_move tl ((x,y), new_max) board player
+        potential_bot difficulty
+    else 
+      get_move tl max board player bot difficulty
 
 
 let get_optimal_move board player bot difficulty= 

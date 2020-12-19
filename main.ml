@@ -488,36 +488,40 @@ let rec get_length () =
     exit 0 
 
 (** [main ()] prompts for the game to play, then starts it. *)
-let main () =
+let rec main () =
   ANSITerminal.(print_string [red] "\n\nWelcome. Type quit to exit the game 
   anytime, type save to save the current game.\n");
-  let rec load () = 
-    print_endline "Do you want to load a previous game? (Y/N)";
-    let ans = read_line () in
-    if ans = "Y" then begin
-      print_endline "Enter the file name for the board";
-      let filename = read_line () in
-      try let board = load_game filename in 
-        print_endline "Enter the file name for the players";
-        try let players = read_line () in
-          match load_players players with
-          |(one, false, two, false, true, _) -> 
-            if one.is_turn then move board one two one two 
-            else move board two one one two
-          | (one, false, two, false, false, _) -> 
-            if one.is_turn then move board one two two one
-            else move board two one two one
-          | (one, false, two, true, true, difficulty) -> 
-            play_with_bot board one two one.is_turn true difficulty
-          | (one, false, two, true, false, difficulty) -> 
-            play_with_bot board one two one.is_turn false difficulty
-          | _ -> exit 0;
-        with Sys_error _ -> load () 
-      with Sys_error _ -> load ()
-    end
-    else if ans = "N" then get_length () 
-    else if ans = "quit" then let () = print_endline "Bye" in exit 0
-    else load () in load ()
+  load ()
+
+
+and load () = 
+  print_endline "Do you want to load a previous game? (Y/N)";
+  let ans = read_line () in
+  if ans = "Y" then set_up_game ()
+  else if ans = "N" then get_length () 
+  else if ans = "quit" then let () = print_endline "Bye" in exit 0
+  else load () 
+
+and set_up_game () = 
+  print_endline "Enter the file name for the board";
+  let filename = read_line () in
+  try let board = load_game filename in 
+    print_endline "Enter the file name for the players";
+    try let players = read_line () in
+      match load_players players with
+      |(one, false, two, false, true, _) -> 
+        if one.is_turn then move board one two one two 
+        else move board two one one two
+      | (one, false, two, false, false, _) -> 
+        if one.is_turn then move board one two two one
+        else move board two one two one
+      | (one, false, two, true, true, difficulty) -> 
+        play_with_bot board one two one.is_turn true difficulty
+      | (one, false, two, true, false, difficulty) -> 
+        play_with_bot board one two one.is_turn false difficulty
+      | _ -> exit 0;
+    with Sys_error _ -> load () 
+  with Sys_error _ -> load ()
 
 let print_board board = 
   let print_line (line: string array) =  
