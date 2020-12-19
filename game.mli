@@ -109,12 +109,13 @@ val load_game: string -> string array array
      The dimensions of [board] must be 13 or 15, comprised of empty spots or 
      player moves. *)
 
-(** [load_players lst] represents players in a specific format. The string list
-    [lst] represents the data collected from a CSV file about the players.
+(** [load_players lst] represents players in a specific format. The string 
+    list [lst] represents the data collected from a CSV file about the players.
     The format contains a player representing the first player loaded, a bool
     representing if that player is a bot, a player representing the second
     player loaded, a bool representing if that player is a bot, a bool 
-    representing if there is a bot in this game, and a string representing any 
+    representing which player has the first turn (true means the first player, 
+    false means the second player), and a string representing any 
     bot players. *)
 val load_players: string -> player * bool * player * bool * bool * string
 
@@ -123,7 +124,8 @@ val load_players: string -> player * bool * player * bool * bool * string
     The format contains a player representing the first player loaded, a bool
     representing if that player is a bot, a player representing the second
     player loaded, a bool representing if that player is a bot, a bool 
-    representing if there is a bot in this game, and a string representing any 
+    representing which player has the first turn (true means the first player, 
+    false means the second player), and a string representing any 
     bot players. *)
 val load_bot_players: string list list -> player * bool * 
                                           player * bool * bool * string
