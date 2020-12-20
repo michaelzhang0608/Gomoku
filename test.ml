@@ -9,7 +9,36 @@ open ANSITerminal
    This module represents the bot and functions that result in bot moves of
    varying difficulty.
 
-   Testing plan for Bot
+   TESTING PLAN FOR GAME MODULE
+
+   We manually tested the functions in Main.ml. Many required user inputs and 
+   reading the inputed values, such the get x coordinate or y coordinate 
+   functions, and functions for interpreting the ID and color of the player’s 
+   stone. These functions were tested manually through playing the game. This 
+   form of testing measured the correctness of the system because we could 
+   visually see if the system responded correctly to the user inputs and/or 
+   provided the correct feedback to an invalid input.
+   
+   In the Game module, we used OUnit to the functions that helped to keep track 
+   of the state of the game, and determined the winner. This includes the 
+   functions check_victor, check_tie, create_board, find_color, get_id, 
+   get_turn, get_games_won, change_turn, available_colors, update_score, and 
+   clear_board. These functions determine the correctness of the program by 
+   calculating the necessary booleans and values for the game state to progress. 
+   Through our testing, we checked the accuracy of each function. For example, 
+   we checked if the check_winner function would return true on a board with 
+   five stones in a row versus if it would return false with four stones in a 
+   row. Test cases were developed through black-box testing such that we could 
+   practice test-driven development. We also utilized helper functions for 
+   testing to increase efficiency. 
+
+   Functions related to saving the game board or game players were tested 
+   manually with CSV files, because it would override the original CSV file 
+   each time the function is applied. The make_move function was tested by 
+   testing if the resulting board matched a different board. 
+
+
+   TESTING PLAN FOR BOT MODULE
 
    In order to properly test Bot, we first have to ensure that the bot makes 
    the best optimal move. We manually calculated the expected optimal move bot
@@ -32,10 +61,12 @@ open ANSITerminal
    when playing with bot and its various difficulties. We puposefully play
    a game that loses and a game that wins against bot's various difficulties. I
    could not win aginst the hard mode of bot no matter how hard I tried, showing
-   that this AI is quite optimal.
+   that this AI is quite optimal. Ultimately, we used black-box testing to 
+   determine the result of the game rather than looking specifically at the 
+   implementation of the bot for testing purposes. 
 *)
 
-
+(* Boards to check our testing results against *)
 let empty = 
   [|[|" + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + "; " + ";
       " + "; " + "; " + "; " + "; " + "|];
@@ -134,6 +165,7 @@ let tie_board =
     [|" B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B "; " B ";
       " B "; " B "; " B "; " B "; " B "|]|]
 
+(* Test players to check our testing results against *)
 let test_player = {id = "clarkson"; games_won= 5; is_turn = true; color = " B "; 
                    last_move = [-1; -1]}
 let test_player2 = {id = ""; games_won= 0; is_turn = false; color = " B "; 
@@ -165,7 +197,7 @@ let color_kwords_no_red =
 
 let test_copy_board b = Array.map Array.copy b
 
-
+(* Creating specific scenarios to test against *)
 let test_update_board b x y value =  
   let line = Array.get b (y - 1) in
   Array.set line (x - 1) value;
@@ -203,7 +235,6 @@ let () = test_update_board not_row_5_3 13 15 " B "
 let () = test_update_board not_row_5_3 12 15 " B " 
 let () = test_update_board not_row_5_3 11 15 " B " 
 
-
 let col_2 = test_copy_board empty 
 let () = test_update_board col_2 9 9 " B " 
 let () = test_update_board col_2 9 8 " B "
@@ -220,7 +251,6 @@ let () = test_update_board not_col_5 11 11 " B "
 let col_5 = test_copy_board not_col_5 
 let () = test_update_board col_5 9 6 " B "
 
-
 let nw_2 = test_copy_board empty 
 let () = test_update_board nw_2 9 9 " B " 
 let () = test_update_board nw_2 10 10 " B "
@@ -236,9 +266,6 @@ let () = test_update_board not_nw_5 7 11 " B "
 
 let nw_5 = test_copy_board not_nw_5 
 let () = test_update_board nw_5 7 7 " B "
-
-(* let board_4 = test_copy_board board_3 
-   let () = test_update_board board_4 12 15 " B "  *)
 
 let board_winner = test_copy_board empty
 let () = test_update_board board_winner 15 15 " B "
@@ -615,7 +642,8 @@ let test_bot_optimal_move name board pcolor plast blast level expected_output =
 (* Same logic as main but not the exactly the same. The caller defines the 
    player and bot. After the player makes a move, the bot makes a move. *)
 let rec step_with_bot name board player bot level lst = 
-  (* ends when there are no more player moves in the list to make or someone wins *)
+  (* ends when there are no more player moves in the list to make or 
+     someone wins *)
   match lst with
   | [] -> (
       print_endline (name ^ " b1="); 
@@ -686,7 +714,8 @@ let test_bot_game name steps b2 color level expected_output =
   print_color b2;
   name >:: (fun  _-> 
       assert_equal expected_output (board = b2)) 
-(* test who is victor of populated board. print out to visually see that it's right *)
+(* test who is victor of populated board. print out to visually see that 
+   it's right *)
 let test_bot_winner name steps level expected_output =
   print_endline "======================================";
   let board = Array.make_matrix 13 13 " - " in

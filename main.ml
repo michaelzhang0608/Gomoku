@@ -15,6 +15,7 @@ let rec play_again board p1 p2 =
     else if command = "Y" then true
     else false
 
+
 let victory board p1 (p2: Game.player) winner= 
   Game.print_color board;
   print_endline ((Game.get_id winner) ^ " has won!");
@@ -29,10 +30,12 @@ let victory board p1 (p2: Game.player) winner=
     print_endline (p1.id ^ ": " ^ (string_of_int p1.games_won));
     play_again (clear_board board) p1 p2 end
 
+
 let tie board p1 p2 = 
   Game.print_color board;
   print_endline ("Tie! You are both too smart.");
   play_again (clear_board board) p1 p2
+
 
 let print_coordinates length = 
   for index = 0 to (length - 1) do 
@@ -66,6 +69,7 @@ let rec get_x_coordinate length =
     print_string [white] "> ";
     get_x_coordinate length
 
+
 let rec get_y_coordinate length = 
   print_endline "Please enter the vertical coordinate you want
     to place your piece in";
@@ -93,7 +97,9 @@ let color_kwords =
   [("red", [red]); ("magenta", [magenta]); ("yellow", [yellow]); 
    ("green", [green]); ("blue", [blue]); ("black", [black])]
 
+
 let colors = ["red";"magenta"; "yellow";"green"; "blue"; "black"]
+
 
 let print_color_command player lst= 
   if player = 0 then 
@@ -133,6 +139,7 @@ let rec get_color () =
         | h :: t -> Game.find_color h :: convert_color t in
       convert_color color_list
 
+
 let rec get_bot_color () = 
   print_color_command 0 color_kwords;
   let color = read_line() in
@@ -153,7 +160,6 @@ let rec get_bot_color () =
           | h :: t -> find_color h :: convert_color t in
         convert_color color_list end in
     get_bot_color () end
-
 
 
 let get_names () = 
@@ -179,6 +185,7 @@ let save_board (board : string array array) name =
   let lst = Array.fold_left fold_function [] board in
   Csv.save name lst
 
+
 let save_human_players (player1: Game.player) (player2 : Game.player) name 
     first= 
   let lst1 = [player1.id;string_of_int(player1.games_won);
@@ -191,6 +198,7 @@ let save_human_players (player1: Game.player) (player2 : Game.player) name
               string_of_int (List.nth (player2.last_move )1)] in
   Csv.save name ([["humans"];lst1;lst2;
                   [if first = player1 then "true" else "false"]])
+
 
 let save_bot_players (player: Game.player) (bot: Game.player) name 
     bool difficulty = 
@@ -266,7 +274,6 @@ and if_victory board p1 p2 first second =
     else move board (Game.update_games_won p1) p2 p2
         (Game.update_games_won p1)
   | false -> print_endline "Bye have a beautiful time"; exit 0 
-
 
 
 let rec play_with_bot board player bot player_turn who_goes_first difficulty= 
@@ -355,8 +362,6 @@ and bot_turn board player bot player_turn who_goes_first difficulty  =
         difficulty 
 
 
-
-
 let rec difficulty_level () = 
   print_endline "Enter the bot difficulty: easy, medium, or hard ";
   let difficulty = read_line () in
@@ -392,7 +397,6 @@ let rec bot_game length =
     | _->  get_turn () in get_turn ()
 
 
-
 let play_game length =
   let board = Array.make_matrix length length " - " in
   let color_list = get_color () in
@@ -408,7 +412,6 @@ let play_game length =
   print_endline "These are how the coordinates work: ";
   print_coordinates length;
   move board player1 player2 player1 player2
-
 
 
 let load_game name = 
@@ -463,11 +466,6 @@ let load_players name =
   else load_human_players lst
 
 
-
-
-
-
-
 let rec get_length () = 
   print_endline "Please enter the length of the board you want (13 or 15) \n";
   print_string [white] "> ";
@@ -487,12 +485,12 @@ let rec get_length () =
     print_endline "Bye have a beautiful time";
     exit 0 
 
+
 (** [main ()] prompts for the game to play, then starts it. *)
 let rec main () =
   ANSITerminal.(print_string [red] "\n\nWelcome. Type quit to exit the game 
   anytime, type save to save the current game.\n");
   load ()
-
 
 and load () = 
   print_endline "Do you want to load a previous game? (Y/N)";
@@ -523,11 +521,11 @@ and set_up_game () =
     with Sys_error _ -> load () 
   with Sys_error _ -> load ()
 
+
 let print_board board = 
   let print_line (line: string array) =  
     Array.fold_left (fun acc x -> acc ^ x) "" line in
   Array.iter(fun x -> print_endline (print_line x)) board
-
 
 
 (* Execute the game engine. *)

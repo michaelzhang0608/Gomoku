@@ -101,14 +101,6 @@ val available_colors: 'a -> ('a * 'b) list -> 'c -> ('a * 'b) list
     name that ends in ".csv".*)
 val load_game: string -> string array array
 
-(** [save_name board player1 player2 first] updates the CSV file "board.csv" 
-    with the specified game board. The string array array [board] represents
-     the board that is to be saved ont the CSV file. The player [player1] and
-     player [player2] represent the first and second players in the game,
-     respectively. The player [first] represents the player whose turn is first.
-     The dimensions of [board] must be 13 or 15, comprised of empty spots or 
-     player moves. *)
-
 (** [load_players lst] represents players in a specific format. The string 
     list [lst] represents the data collected from a CSV file about the players.
     The format contains a player representing the first player loaded, a bool
