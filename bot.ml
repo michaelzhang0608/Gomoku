@@ -28,7 +28,9 @@ let make_temporary_move board x y (bot: Game.player)=
   Array.set line y piece;
   Array.set board x line;;
 
-
+(** The helper function [make_move_color] updates the game board with the
+    stone with string [color] according to the int [x] and int [y] 
+    coordinates. *)
 let make_move_color board x y color = 
   let line = Array.get board x in
   Array.set line y color;
@@ -42,7 +44,8 @@ let clear_piece board x y =
   Array.set line y piece;
   Array.set board x line;;
 
-
+(** The helper function [find_max] finds the maximum value in the specified
+    parameters *)
 let find_max = function
   | x::xs -> List.fold_left max x xs
   | _ -> failwith "Not valid"
@@ -133,7 +136,8 @@ let human_1 board x y bot human difficulty=
                               List.nth (find_heuristic board x y bot) 1
   else 50 + List.nth (find_heuristic board x y human) 1
 
-
+(** The helper function [easy_evaluation] returns an int based on how optimal
+    the move is given the hard level. *)
 let hard_evaluation board (bot:Game.player) human difficulty = 
   let x = List.nth bot.last_move 0 in
   let y = List.nth bot.last_move 1 in
@@ -155,7 +159,8 @@ let hard_evaluation board (bot:Game.player) human difficulty =
             x y human = 3 then human_1 board x y bot human difficulty
   else 5 
 
-
+(** The helper function [easy_evaluation] returns an int based on how optimal
+    the move is given the medium level. *)
 let medium_evaluation board (bot:Game.player) human difficulty= 
   let x = List.nth bot.last_move 0 in
   let y = List.nth bot.last_move 1 in
@@ -177,7 +182,8 @@ let medium_evaluation board (bot:Game.player) human difficulty=
             x y human = 3 then human_1 board x y bot human difficulty
   else 5 
 
-
+(** The helper function [easy_evaluation] returns an int based on how optimal
+    the move is given the easy level. *)
 let easy_evaluation board (bot:Game.player) human difficulty = 
   let x = List.nth bot.last_move 0 in
   let y = List.nth bot.last_move 1 in
@@ -199,7 +205,8 @@ let easy_evaluation board (bot:Game.player) human difficulty =
   then human_1 board x y bot human difficulty
   else 5 
 
-
+(** The helper function [get_empty_spots] returns the x and y coordinates of
+    all the spots of the game board without a player's stone. *)
 let rec get_empty_spots board acc x y = 
   if x  = Array.length board  then acc
   else if Array.get(Array.get board (x)) (y) = " - " then 
@@ -210,7 +217,8 @@ let rec get_empty_spots board acc x y =
     if y = Array.length board - 1 then get_empty_spots board acc (x + 1) 0
     else get_empty_spots board acc x (y + 1) end
 
-
+(** The helper function [get_move] gets all possible moves and evaluates 
+    the move based on the heuristic.  *)
 let rec get_move lst max board (player: Game.player) bot difficulty= 
   match lst with 
   | [] -> max
@@ -221,7 +229,8 @@ let rec get_move lst max board (player: Game.player) bot difficulty=
         let potential_bot : Game.player = {bot with last_move = [x;y]} in 
         evaluate_move max board player bot potential_bot difficulty x y tl end
 
-
+(** The helper function [evaluate_move] determines which move to make 
+    based on the difficulty of the bot player.  *)
 and evaluate_move max board player bot potential_bot difficulty x y tl = 
   match max with 
   | (_, num) -> 
@@ -237,6 +246,7 @@ and evaluate_move max board player bot potential_bot difficulty x y tl =
         potential_bot difficulty
     else 
       get_move tl max board player bot difficulty
+
 
 let get_optimal_move board player bot difficulty= 
   if bot.last_move = [-1;-1] then 
