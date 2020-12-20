@@ -8,16 +8,6 @@ open ANSITerminal
 type board = string array array
 
 
-(** Type score represents the number of points between 2 players of a game. 
-    The scores of both players are saved within a record.
-    The int [player1] represents the score of the first player in the game. 
-    The int [player2] represents the score of the second player in 
-    the game. *)
-type score = {
-  player1: int;
-  player2: int
-}
-
 (** Type player represents a player in the Gomoku game. The player is 
     represented by a record that stores information that the player inputs or is
     generated as the game progresses. The string [id] is the player-inputted 
@@ -36,21 +26,6 @@ type player = {
   is_turn: bool;
   color: string;
   last_move: int list;
-}
-
-
-(** Type game represents a Gomoku game. The game is represented by a record
-    that saves information about the game. The int [id] is the unique ID of
-    the game. The board [game_board] is the game board created for the
-    particular game. The player [player1] represents the first player, and 
-    contains information that they have inputted. The player [player2] 
-    represents the second player, and contains information that they have 
-    inputted. *)
-type game = {
-  id: int;
-  game_board: board;
-  player1: player;
-  player2: player;
 }
 
 
