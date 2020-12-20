@@ -1,5 +1,7 @@
 open Game
 
+(** The helper function [check_length] uses tail-recursion to check the 
+    length of a group of stones in the direction of [direction] *)
 let rec check_length (board: Game.board) x y dir color acc = 
   if x < 0 || x = Array.length board || y < 0 || y = Array.length board || 
      Array.get (Array.get board (x)) (y) <> color then acc
@@ -18,17 +20,22 @@ let rec check_length (board: Game.board) x y dir color acc =
   else check_length board (x + 1) (y - 1) "southwest"
       color (acc + 1)
 
+(** The helper function [make_temporary_move] makes a potential move for 
+    the bot *)
 let make_temporary_move board x y (bot: Game.player)= 
   let piece = bot.color in
   let line = Array.get board x in
   Array.set line y piece;
   Array.set board x line;;
 
+
 let make_move_color board x y color = 
   let line = Array.get board x in
   Array.set line y color;
   Array.set board x line;;
 
+(** The helper function [clear_piece] undos the temporary move made in 
+    [make_temporary_move] *)
 let clear_piece board x y = 
   let piece = " - " in
   let line = Array.get board x in
@@ -40,7 +47,12 @@ let find_max = function
   | x::xs -> List.fold_left max x xs
   | _ -> failwith "Not valid"
 
-(* returns number in a a row if player's piece was placed at x y *)
+
+(** The helper function [find_heuristic board x y] returns a list of two 
+    elements [el1, el2] such that el1 is the maximum number of pieces in a row 
+    that the piece at coordinates x and y belongs to, and el2 is the total 
+    number of pieces that are either next to the piece at coordinates x y or 
+    are connected to it *)
 let find_heuristic board x y (player: Game.player) = 
   let color = player.color in
   let lst = [check_length board (x - 1) y "north" color 1;
@@ -57,7 +69,9 @@ let find_heuristic board x y (player: Game.player) =
   [find_max lst; sum 0 lst]
 
 
-
+(** The helper function [check_edge_cases board x y player] returns the number 
+    of pieces in a row that would be the player's color if a piece of the 
+    player's color was placed at coordinates x and y. *)
 let check_edge_cases board x y player = 
   let color = player.color in
   let lst = [check_length board (x - 1) y "north" color 1 +
@@ -70,30 +84,36 @@ let check_edge_cases board x y player =
              check_length board (x + 1) (y - 1) "southwest" color 1] in
   find_max lst
 
+
 let bot_4 board x y bot human difficulty= 
   if difficulty = "hard" then 1000 + List.nth (find_heuristic board x y bot) 1 
                               + List.nth (find_heuristic board x y human) 1
   else 1000 + List.nth (find_heuristic board x y bot) 1
+
 
 let human_4 board x y bot human difficulty= 
   if difficulty = "hard" then 1000 + List.nth (find_heuristic board x y human)
                                 1 + List.nth (find_heuristic board x y bot) 1
   else 1000 + List.nth (find_heuristic board x y human) 1
 
+
 let bot_3 board x y bot human difficulty= 
   if difficulty = "hard" then 800 + List.nth (find_heuristic board x y bot) 1 + 
                               List.nth (find_heuristic board x y human) 1
   else 800 + List.nth (find_heuristic board x y bot) 1
+
 
 let human_3 board x y bot human difficulty= 
   if difficulty = "hard" then 600 + List.nth (find_heuristic board x y human) 1 
                               +List.nth (find_heuristic board x y bot) 1
   else 600 + List.nth (find_heuristic board x y human) 1
 
+
 let bot_2 board x y bot human difficulty= 
   if difficulty = "hard" then 400 + List.nth (find_heuristic board x y bot) 1 + 
                               List.nth (find_heuristic board x y human) 1
   else 400 + List.nth (find_heuristic board x y bot) 1
+
 
 let human_2 board x y bot human difficulty= 
   if difficulty = "hard" then 
@@ -101,15 +121,18 @@ let human_2 board x y bot human difficulty=
     List.nth (find_heuristic board x y bot) 1
   else 200 + List.nth (find_heuristic board x y human) 1 
 
+
 let bot_1 board x y bot human difficulty= 
   if difficulty = "hard" then 100 + List.nth (find_heuristic board x y bot) 1 + 
                               List.nth (find_heuristic board x y human) 1
   else 100 + List.nth (find_heuristic board x y bot) 1
 
+
 let human_1 board x y bot human difficulty= 
   if difficulty = "hard" then 50 + List.nth (find_heuristic board x y human) 1 + 
                               List.nth (find_heuristic board x y bot) 1
   else 50 + List.nth (find_heuristic board x y human) 1
+
 
 let hard_evaluation board (bot:Game.player) human difficulty = 
   let x = List.nth bot.last_move 0 in
@@ -131,6 +154,7 @@ let hard_evaluation board (bot:Game.player) human difficulty =
   else if List.hd (find_heuristic board x y human) = 3 || check_edge_cases board
             x y human = 3 then human_1 board x y bot human difficulty
   else 5 
+
 
 let medium_evaluation board (bot:Game.player) human difficulty= 
   let x = List.nth bot.last_move 0 in
@@ -176,7 +200,6 @@ let easy_evaluation board (bot:Game.player) human difficulty =
   else 5 
 
 
-
 let rec get_empty_spots board acc x y = 
   if x  = Array.length board  then acc
   else if Array.get(Array.get board (x)) (y) = " - " then 
@@ -188,7 +211,6 @@ let rec get_empty_spots board acc x y =
     else get_empty_spots board acc x (y + 1) end
 
 
-
 let rec get_move lst max board (player: Game.player) bot difficulty= 
   match lst with 
   | [] -> max
@@ -198,6 +220,7 @@ let rec get_move lst max board (player: Game.player) bot difficulty=
         make_temporary_move board x y bot;
         let potential_bot : Game.player = {bot with last_move = [x;y]} in 
         evaluate_move max board player bot potential_bot difficulty x y tl end
+
 
 and evaluate_move max board player bot potential_bot difficulty x y tl = 
   match max with 
@@ -214,7 +237,6 @@ and evaluate_move max board player bot potential_bot difficulty x y tl =
         potential_bot difficulty
     else 
       get_move tl max board player bot difficulty
-
 
 let get_optimal_move board player bot difficulty= 
   if bot.last_move = [-1;-1] then 
@@ -234,28 +256,6 @@ let get_optimal_move board player bot difficulty=
             board player bot difficulty with
     | ((x,y),a) -> 
       (x,y)
-
-
-let save_bot_players (player: Game.player) (bot: Game.player) name 
-    bool difficulty = 
-  let lst1 = [player.id;string_of_int(player.games_won);
-              if player.is_turn then "true" else "false";player.color;
-              string_of_int (List.nth (player.last_move) 0);
-              string_of_int (List.nth (player.last_move )1); 
-              if bool then "true" else "false";
-              difficulty] in
-  let lst2 = [bot.id;string_of_int(player.games_won);
-              if bot.is_turn then "true" else "false";bot.color;
-              string_of_int (List.nth (bot.last_move) 0);
-              string_of_int (List.nth (bot.last_move )1); 
-              if bool then "true" else "false";
-              difficulty] in
-  Csv.save name ([["bot"];lst1;lst2])
-
-
-
-
-
 
 
 
