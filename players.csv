@@ -1,3 +1,4 @@
-bot
-u,0,true," R ",2,1,true,hard
-Tarzan,0,false," B ",0,2,false,hard
+humans
+r,1,true," R ",1,5
+t,0,false," B ",5,5
+true
