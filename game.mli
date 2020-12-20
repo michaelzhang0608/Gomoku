@@ -31,17 +31,17 @@ val print_color : board -> unit
     The int [x] is the x coordinate of the board and the int [y] is the y
     coordinate of the board. The players must take turns to make moves to
     maintain the order between Player 1 and Player 2’s stones. *)
-val make_move : string array array -> int -> int -> player -> unit
+val make_move : board -> int -> int -> player -> unit
 
 (** [check_victor board] is the bool if the game has a winner. The board [board]
     is the current board with all the players' moves. *)
-val  check_victor: 'a array array -> int -> int -> bool
+val  check_victor: board -> int -> int -> bool
 
 (** [check_tie board] is the bool if the game has resulted in a tie. The board 
     [board] is the current board with all the players' moves. A tie only occurs 
     if the board is filled, meaning there are no more moves to be made and there
     is no winner.*)
-val  check_tie: string array array -> bool
+val  check_tie: board -> bool
 
 (** [get_turn player] is the bool representing if the turn belongs to the 
     player. The player [player] represents a player in the game.  *)
@@ -70,10 +70,10 @@ val update_score: player -> player
     player who won the previous game that gets a point added to their score. *)
 val change_turn: player -> player
 
-(** [reset_board board] updates the board [board] to an empty board of the
-    previous board's length. Empty spots are represented by the string " + ".
+(** [clear_board board] updates the board [board] to an empty board of the
+    same dimensions as [board]. Empty spots are represented by the string " + ".
     The board [board] is the board with the players' moves. *)
-val reset_board: board -> unit
+val clear_board: board -> unit
 
 (** [find_color color] is the string presentation of the color of a
     player's stones to be printed on the board. The string [color] is the 
@@ -82,12 +82,8 @@ val find_color: string -> string
 
 (** [create_board dimensions] create the string array array representing
     the game board. The int [dimensions] is the length of the game board. *)
-val create_board: int -> string array array
+val create_board: int -> board
 
-(** [clear_board board] returns the string array array representing
-    an empty game board. The board [board] represents the current game board
-    with the players' moves. *)
-val clear_board: 'a array array -> string array array
 
 (** [available_colors color1] returns the list of string representations of 
     colors and each color's respective ANSITerminal style, except for the color 
@@ -99,7 +95,7 @@ val available_colors: 'a -> ('a * 'b) list -> 'c -> ('a * 'b) list
 (** [load_game name] is the board saved on the CSV file. The string [name] 
     represents the CSV file name. The string [name] must be a valid CSV file
     name that ends in ".csv".*)
-val load_game: string -> string array array
+val load_game: string -> board
 
 (** [load_players lst] represents players in a specific format. The string 
     list [lst] represents the data collected from a CSV file about the players.
@@ -140,6 +136,6 @@ val save_human_players: player -> player -> string -> player -> unit
     otherwise a new file of that name is created. 
 
     The string [name] must end with ".csv" in order to create a valid file.*)
-val save_board: string array array -> string -> unit
+val save_board: board -> string -> unit
 
 

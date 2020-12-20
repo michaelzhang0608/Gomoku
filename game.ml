@@ -133,7 +133,7 @@ let change_turn player =
     {player with is_turn = false}
   else {player with is_turn = true}
 
-let reset_board (b : board) =
+let clear_board (b : board) =
   let reset_line i ln = 
     for j = 0 to Array.length ln - 1 do 
       Array.set ln j " - "
@@ -163,10 +163,6 @@ let available_colors color1 color_kwords acc =
 
 let create_board dimension = 
   Array.make_matrix dimension dimension " - "
-
-
-let clear_board (board : 'a array array) = 
-  create_board (Array.length board) 
 
 
 let load_game name = 
