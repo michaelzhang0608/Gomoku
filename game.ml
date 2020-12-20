@@ -1,14 +1,34 @@
 open ANSITerminal
 
+(** Type board represents the Gomoku board. The board is represented by a 
+    string array array, which must be either length 13 or 15. 
+
+    The players must input a valid length in order to start the game.
+    The players will be asked to re-input the value if it is not valid.  *)
 type board = string array array
 
-type player_id = int
-
+(** Type score represents the number of points between 2 players of a game. 
+    The scores of both players are saved within a record.
+    The int [player1] represents the score of the first player in the game. 
+    The int [player2] represents the score of the second player in 
+    the game. *)
 type score = {
   player1: int;
   player2: int
 }
 
+(** Type player represents a player in the Gomoku game. The player is 
+    represented by a record that stores information that the player inputs or is
+    generated as the game progresses. The string [id] is the player-inputted 
+    name for their player. The int [games_won] represents how many games this 
+    player has won, including saved games. The bool [is_turn] represents if it
+    is currently this players turn. The string [color] represents the color of 
+    this player's stone. The int list [last_move] represents the x and y
+    coordinates of the player's previous move.
+
+    A player must input a valid ID and color choice when playing the game in 
+    order to start the game. The players will be asked to re-input the value 
+    if it is not valid.*)
 type player = {
   id: string;
   games_won: int;
@@ -17,18 +37,19 @@ type player = {
   last_move: int list;
 }
 
+(** Type game represents a Gomoku game. The game is represented by a record
+    that saves information about the game. The int [id] is the unique ID of
+    the game. The board [game_board] is the game board created for the
+    particular game. The player [player1] represents the first player, and 
+    contains information that they have inputted. The player [player2] 
+    represents the second player, and contains information that they have 
+    inputted. *)
 type game = {
   id: int;
   game_board: board;
   player1: player;
   player2: player;
 }
-
-(** let print_board (board: board) = 
-    let print_line (line: string array) =  
-    Array.fold_left (fun acc x -> acc ^ x) "" line in
-    Array.iter(fun x -> print_endline (print_line x)) board **)
-
 
 let print_color (board: board)  = 
   let print_line (line: string array) = 

@@ -30,16 +30,27 @@ val find_heuristic: board -> int -> int -> Game.player -> int list
 val check_edge_cases: board -> int -> int -> Game.player -> int
 
 
-
+(** [get_optimal_move board player bot difficulty] is the tuple int * int that
+    represents the x coordinate and y coordinate of the optimal move to play
+    given the current game. The board [board] is the current game board with
+    all the previous moves. The player [player] represents the human player.
+    The player [bot] represents the bot player. The string [difficulty] 
+    represents how smart the bot will play (easy, medium, hard), which
+    influences the optimal move.*)
 val get_optimal_move: string array array -> player -> player -> string ->
   (int * int)
 
-(** [save_bot_players player bot bool difficulty] updates the CSV file 
-    "players.csv" with the specified player and bot. The player [player] 
+(** [save_bot_players player name bot bool difficulty] updates or creates a 
+    CSV file with the specified player and bot. The player [player] 
     represents the human player. The bot [bot] represents the bot player
     The bool [bool] represents which players goes first. True means the human
-    player goes first and false means the bot goes first. The string [difficulty]
-    represents the level of difficulty for the bot. *)
+    player goes first and false means the bot goes first. 
+    The string [difficulty] represents the level of difficulty for the bot. 
+    The string [name] represents the name of the CSV file to save the 
+    bot player information to. If the file name exists, the file is update, 
+    otherwise a new file of that name is created.
+
+    The string [name] must end with ".csv" in order to create a valid file.*)
 val save_bot_players: Game.player -> Game.player -> string -> bool -> 
   string -> unit
 
