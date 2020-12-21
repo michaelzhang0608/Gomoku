@@ -40,11 +40,13 @@ open ANSITerminal
 
    TESTING PLAN FOR BOT MODULE
 
+   We did Ounit testing for the Bot module. 
+
    In order to properly test Bot, we first have to ensure that the bot makes 
    the best optimal move. We manually calculated the expected optimal move bot
    makes through the heuristic algorithm––weights are assigned to the vicinty
    of Player's last move and the empty spot with the most weight is the optimal
-   move. We compare the expected optimal move with the different difficutlies of
+   move. We compare the expected optimal move with the different difficulties of
    bot on different boards. 
 
    Next, we check to see if the bot is actually capable of making a move on its

@@ -36,8 +36,7 @@ let clear_piece board x y =
   Array.set line y piece;
   Array.set board x line;;
 
-(** The helper function [find_max] finds the maximum value in the specified
-    parameters *)
+(** The helper function [find_max] finds the maximum element of a list. *)
 let find_max = function
   | x::xs -> List.fold_left max x xs
   | _ -> failwith "Not valid"
