@@ -18,7 +18,7 @@ open ANSITerminal
    form of testing measured the correctness of the system because we could 
    visually see if the system responded correctly to the user inputs and/or 
    provided the correct feedback to an invalid input.
-   
+
    In the Game module, we used OUnit to the functions that helped to keep track 
    of the state of the game, and determined the winner. This includes the 
    functions check_victor, check_tie, create_board, find_color, get_id, 
@@ -323,7 +323,8 @@ let update_score_test name player expected_output=
                (update_score player) )
 
 let clear_board_test name board expected_output= 
-  name >:: (fun  _-> assert_equal expected_output (clear_board board) )
+  let () = clear_board board in
+  name >:: (fun  _-> assert_equal expected_output  board )
 
 let load_game_test name file_name expected_output = 
   name >:: (fun _ -> assert_equal expected_output (load_game "board.csv"))
@@ -336,7 +337,7 @@ let reset_board_test name b1 b2 expected_output =
   print_endline "============================================";
   print_endline (name ^ " before reset=");
   print_color b1;
-  reset_board b1;
+  clear_board b1;
   print_endline (name ^ " after reset:");
   print_color b1;
   name >:: (fun  _-> 

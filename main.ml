@@ -125,16 +125,20 @@ let rec get_color () =
   if List.mem color1 colors = false then begin
     print_string [red] "Invalid color try again"; 
     print_endline "";
-    get_color () end
+    get_color (); end
   else  
     let colors2 = Game.available_colors color1 color_kwords [] in
+    let rec create_colors_lst lst acc = 
+      match lst with 
+      | [] -> acc 
+      | (a, z) :: t -> create_colors_lst t (a :: acc) in
     print_color_command 2 (colors2);
     let color2 = String.lowercase_ascii (read_line ()) in
     if color2 = "quit" then exit 0;
-    if List.mem color2 colors = false then begin
+    if List.mem color2 (create_colors_lst colors2 []) = false then begin
       print_string [red] "Invalid color try again"; 
       print_endline "";
-      get_color () end
+      get_color (); end
     else
       let color_list = [color1; color2] in
       let rec convert_color lst = match lst with
@@ -470,7 +474,7 @@ let load_bot_players lst =
 
 let load_players name = 
   let lst = Csv.load name in
-  if List.hd (List.nth lst 0) = "bots" then load_bot_players lst
+  if List.hd (List.hd lst) = "bot" then load_bot_players lst
   else load_human_players lst
 
 
