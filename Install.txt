@@ -1,0 +1,61 @@
+Gomoku LOC for OCAML: 1586
+Install Directions
+1. Unzip finalproject.zip
+2. Open finalproject in Vscode
+3. View terminal in vscode
+4. Run utop in terminal
+5. Type "make build" in the terminal
+6. Type "make" in the terminal
+6. You should be prompted by terminal the game has started!
+
+Playing with another Player
+Enter the following in the order when prompted:
+1. N
+2. 13
+3. N
+4. red
+5. green
+6. Todd
+7. Bob
+8. (1,1) enter the numbers separately
+9. (3,5)
+10. (1,2)
+11. (7,8)
+12. (1,3)
+13. (8,8)
+14. (1,4)
+15. (4,3)
+16. (1,5) 
+17. Todd wins! (Don't type anything for this)
+18. N
+
+Playing with a Bot (medium difficulty) also save and load
+1. make
+2. N
+3. 13
+4. Y
+5. medium
+6. red
+7. Todd
+8. N
+9. (11,1) enter the numbers separately
+10. (11,2) 
+11. (4,4) 
+12. (9,9) 
+13. (10,2) 
+14. (9,2) 
+15. (9,4) 
+16. (7,3) 
+17. save
+18. tarz.csv
+19. todd.csv
+20. make
+21. Y
+22. tarz.csv
+23. todd.csv
+24. (8,6)
+25. Tarzan wins! (Don't type anything for this)
+26. N
+
+
+

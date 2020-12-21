@@ -23,7 +23,7 @@ play:
 	$(OCAMLBUILD) $(MAIN) && ./$(MAIN)
 
 zip:
-	zip finalproject.zip *.ml* _tags Makefile .merlin .ocamlinit
+	zip finalproject.zip *.ml* *.csv *.txt _tags Makefile .merlin .ocamlinit
 
 docs: docs-public docs-private
   
