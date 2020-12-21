@@ -23,20 +23,20 @@ let victory board p1 (p2: Game.player) winner=
     print_endline "Score";
     print_endline (p1.id ^ ": " ^ (string_of_int (p1.games_won + 1)));
     print_endline (p2.id ^ ": " ^ (string_of_int p2.games_won));
-    clear_board board;
+    let () = clear_board board in
     play_again board p1 p2 end
   else begin
     print_endline "Score";
     print_endline (p2.id ^ ": " ^ (string_of_int (p2.games_won + 1)));
     print_endline (p1.id ^ ": " ^ (string_of_int p1.games_won));
-    clear_board board;
+    let () = clear_board board in
     play_again (clear_board board) p1 p2 end
 
 
 let tie board p1 p2 = 
   Game.print_color board;
   print_endline ("Tie! You are both too smart.");
-  clear_board board;
+  let () = clear_board board in
   play_again board p1 p2
 
 
@@ -263,7 +263,8 @@ let rec move board p1 p2 first second =
 
 and invalid_move board p1 p2 first second x y = 
   if Array.get(Array.get board (y - 1)) (x - 1) <> " - " then begin 
-    let () = print_string [red] "Invalid move/n" in
+    let () = print_string [red] "Invalid move. Please try again." in
+    let () = print_endline "" in
     true end
   else false
 
@@ -363,7 +364,7 @@ and bot_turn board player bot player_turn who_goes_first difficulty  =
     else if Game.check_victor board x y = true then begin
       if victory board new_bot player new_bot then
         let new_bot = Game.update_games_won {bot with last_move = [-1;-1]} in
-        let () = clear_board board in
+        let ()= Game.clear_board board in
         play_with_bot  board  player new_bot 
           who_goes_first who_goes_first difficulty
       else let () = print_endline "Bye have a beautiful time" in exit 0; end
