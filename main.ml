@@ -23,18 +23,21 @@ let victory board p1 (p2: Game.player) winner=
     print_endline "Score";
     print_endline (p1.id ^ ": " ^ (string_of_int (p1.games_won + 1)));
     print_endline (p2.id ^ ": " ^ (string_of_int p2.games_won));
-    play_again (clear_board board) p1 p2 end
+    clear_board board;
+    play_again board p1 p2 end
   else begin
     print_endline "Score";
     print_endline (p2.id ^ ": " ^ (string_of_int (p2.games_won + 1)));
     print_endline (p1.id ^ ": " ^ (string_of_int p1.games_won));
+    clear_board board;
     play_again (clear_board board) p1 p2 end
 
 
 let tie board p1 p2 = 
   Game.print_color board;
   print_endline ("Tie! You are both too smart.");
-  play_again (clear_board board) p1 p2
+  clear_board board;
+  play_again board p1 p2
 
 
 let print_coordinates length = 
@@ -122,7 +125,7 @@ let rec get_color () =
   if List.mem color1 colors = false then begin
     print_string [red] "Invalid color try again"; 
     print_endline "";
-    get_color (); end
+    get_color () end
   else  
     let colors2 = Game.available_colors color1 color_kwords [] in
     print_color_command 2 (colors2);
@@ -131,7 +134,7 @@ let rec get_color () =
     if List.mem color2 colors = false then begin
       print_string [red] "Invalid color try again"; 
       print_endline "";
-      get_color (); end
+      get_color () end
     else
       let color_list = [color1; color2] in
       let rec convert_color lst = match lst with
@@ -262,8 +265,9 @@ and invalid_move board p1 p2 first second x y =
 
 and if_tie board p1 p2 first second = 
   match tie board p1 p2 with 
-  | true -> move (Game.clear_board board) 
-              first second first second 
+  | true -> 
+    let () = clear_board board in
+    move board first second first second 
   | false ->  print_endline "Bye have a beautiful time"; exit 0; 
 
 and if_victory board p1 p2 first second = 
@@ -300,7 +304,8 @@ and invalid_move board player bot player_turn who_goes_first difficulty =
 
 and if_tie board new_player bot player_turn who_goes_first difficulty = 
   if tie board new_player bot then 
-    play_with_bot (clear_board board) new_player bot player_turn who_goes_first
+    let () = clear_board board in
+    play_with_bot board new_player bot player_turn who_goes_first
       difficulty
   else 
     let () = print_endline "Bye have a beautiful time" in
@@ -309,7 +314,8 @@ and if_tie board new_player bot player_turn who_goes_first difficulty =
 and if_victory board new_player bot who_goes_first difficulty = 
   if victory board new_player bot new_player then 
     let new_player = Game.update_games_won new_player in 
-    play_with_bot (clear_board board) 
+    let () = clear_board board in
+    play_with_bot board 
       new_player bot who_goes_first who_goes_first difficulty;
   else 
     let () = print_endline "Bye have a beautiful time" in
@@ -346,13 +352,15 @@ and bot_turn board player bot player_turn who_goes_first difficulty  =
     Game.make_move board (y + 1) (x + 1) bot;
     if Game.check_tie board then begin
       if tie board player new_bot then
-        play_with_bot (clear_board board) player new_bot player_turn 
+        let () = clear_board board in
+        play_with_bot board player new_bot player_turn 
           who_goes_first difficulty
       else let () = print_endline "Bye have a beautiful time" in exit 0 end
     else if Game.check_victor board x y = true then begin
       if victory board new_bot player new_bot then
         let new_bot = Game.update_games_won {bot with last_move = [-1;-1]} in
-        play_with_bot (clear_board board ) player new_bot 
+        let () = clear_board board in
+        play_with_bot  board  player new_bot 
           who_goes_first who_goes_first difficulty
       else let () = print_endline "Bye have a beautiful time" in exit 0; end
     else  

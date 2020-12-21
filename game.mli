@@ -68,10 +68,10 @@ val update_score: player -> player
     player who won the previous game that gets a point added to their score. *)
 val change_turn: player -> player
 
-(** [reset_board board] updates the board [board] to an empty board of the
-    previous board's length. Empty spots are represented by the string " + ".
+(** [clear_board board] updates the board [board] to an empty board of the
+    same dimensions as [board]. Empty spots are represented by the string " + ".
     The board [board] is the board with the players' moves. *)
-val reset_board: board -> unit
+val clear_board: board -> unit
 
 (** [find_color color] is the string presentation of the color of a
     player's stones to be printed on the board. The string [color] is the 
