@@ -28,14 +28,6 @@ let make_temporary_move board x y (bot: Game.player)=
   Array.set line y piece;
   Array.set board x line;;
 
-(** The helper function [make_move_color] updates the game board with the
-    stone with string [color] according to the int [x] and int [y] 
-    coordinates. *)
-let make_move_color board x y color = 
-  let line = Array.get board x in
-  Array.set line y color;
-  Array.set board x line;;
-
 (** The helper function [clear_piece] undos the temporary move made in 
     [make_temporary_move] *)
 let clear_piece board x y = 
@@ -54,8 +46,7 @@ let find_max = function
 (** The helper function [find_heuristic board x y] returns a list of two 
     elements [el1, el2] such that el1 is the maximum number of pieces in a row 
     that the piece at coordinates x and y belongs to, and el2 is the total 
-    number of pieces that are either next to the piece at coordinates x y or 
-    are connected to it *)
+    number of pieces that affected by the new piece (are adjacent to it) *)
 let find_heuristic board x y (player: Game.player) = 
   let color = player.color in
   let lst = [check_length board (x - 1) y "north" color 1;
@@ -72,9 +63,11 @@ let find_heuristic board x y (player: Game.player) =
   [find_max lst; sum 0 lst]
 
 
-(** The helper function [check_edge_cases board x y player] returns the number 
-    of pieces in a row that would be the player's color if a piece of the 
-    player's color was placed at coordinates x and y. *)
+(** The helper function [check_edge_cases board x y player] checks an 
+    edge case where there is a spot purposely left empty in the 
+    middle of a string of pieces that, 
+    once filled, would give the player a certain number of pieces in a row. This
+    is a common strategy for experienced Gomoku players . *)
 let check_edge_cases board x y player = 
   let color = player.color in
   let lst = [check_length board (x - 1) y "north" color 1 +
@@ -87,50 +80,58 @@ let check_edge_cases board x y player =
              check_length board (x + 1) (y - 1) "southwest" color 1] in
   find_max lst
 
-
+(* [bot_4] returns the heuristic for the case in which the bot has 4 pieces in a 
+   row already and could win on this turn *)
 let bot_4 board x y bot human difficulty= 
   if difficulty = "hard" then 1000 + List.nth (find_heuristic board x y bot) 1 
                               + List.nth (find_heuristic board x y human) 1
   else 1000 + List.nth (find_heuristic board x y bot) 1
 
-
+(* [human_4] returns the heuristic for a case in which the human has 4 pieces
+   in a row already and is about to win on their turn and needs to be blocked *)
 let human_4 board x y bot human difficulty= 
   if difficulty = "hard" then 1000 + List.nth (find_heuristic board x y human)
                                 1 + List.nth (find_heuristic board x y bot) 1
   else 1000 + List.nth (find_heuristic board x y human) 1
 
-
+(* [bot_3] returns the heuristic for the case where the bot has 3 pieces in
+   a row already and could get four in a row *)
 let bot_3 board x y bot human difficulty= 
   if difficulty = "hard" then 800 + List.nth (find_heuristic board x y bot) 1 + 
                               List.nth (find_heuristic board x y human) 1
   else 800 + List.nth (find_heuristic board x y bot) 1
 
-
+(* [human_3] returns the heuristic for the case where the human has 3 pieces
+   in a row and could get four in a row *)
 let human_3 board x y bot human difficulty= 
   if difficulty = "hard" then 600 + List.nth (find_heuristic board x y human) 1 
                               +List.nth (find_heuristic board x y bot) 1
   else 600 + List.nth (find_heuristic board x y human) 1
 
-
+(* [bot_2] returns the heuristic for the case where the bot has 2 pieces
+   in a row already and could get 3 in a row *)
 let bot_2 board x y bot human difficulty= 
   if difficulty = "hard" then 400 + List.nth (find_heuristic board x y bot) 1 + 
                               List.nth (find_heuristic board x y human) 1
   else 400 + List.nth (find_heuristic board x y bot) 1
 
-
+(* [human_2] returns the heuristic for the case where the human has a piece
+   next to the possible move and could get 2 in a row *)
 let human_2 board x y bot human difficulty= 
   if difficulty = "hard" then 
     200 + List.nth (find_heuristic board x y human) 1 + 
     List.nth (find_heuristic board x y bot) 1
   else 200 + List.nth (find_heuristic board x y human) 1 
 
-
+(* [bot_1] returns the heuristic for the case where the max amount of pieces
+   in a row the bot could get with the current possible move is one *)
 let bot_1 board x y bot human difficulty= 
   if difficulty = "hard" then 100 + List.nth (find_heuristic board x y bot) 1 + 
                               List.nth (find_heuristic board x y human) 1
   else 100 + List.nth (find_heuristic board x y bot) 1
 
-
+(* [human_1] returns the heuristic for the case where the max amount of pieces
+   in a row the human could get with the current possible move is one *)
 let human_1 board x y bot human difficulty= 
   if difficulty = "hard" then 50 + List.nth (find_heuristic board x y human) 1 + 
                               List.nth (find_heuristic board x y bot) 1
