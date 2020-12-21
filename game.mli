@@ -5,10 +5,10 @@
    game, winners, and functions that result in player moves.
 *)
 
+(** The type of game boards. *)
 type board = string array array
 
-type score
-
+(** The type of player. *)
 type player = {
   id: string;
   games_won: int;
@@ -16,8 +16,6 @@ type player = {
   color: string;
   last_move: int list;
 }
-
-type game
 
 (** [print_board board] is the visual representation of the Gomoku board, using
     the ‘+’ character for empty spots. Player 1’s stones are represented by the
@@ -84,6 +82,10 @@ val find_color: string -> string
     the game board. The int [dimensions] is the length of the game board. *)
 val create_board: int -> board
 
+(** [clear_board board] returns the string array array representing
+    an empty game board. The board [board] represents the current game board
+    with the players' moves. *)
+val clear_board: board -> board
 
 (** [available_colors color1] returns the list of string representations of 
     colors and each color's respective ANSITerminal style, except for the color 
