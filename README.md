@@ -1,4 +1,3 @@
-# 3110-final-project
-Contributors: Jessie Wong, Renee Hoh, Michael Zhang
+Omok
 
-This is Gomoku, a game that is similar to connect four, but with a twist. 
+Traditional Korean board game, similar to Connect Five, with options to save and load games and play with an AI.
